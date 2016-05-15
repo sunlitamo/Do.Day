@@ -100,19 +100,16 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
         case self.calendarCollectionView:
             let cell = calendarCollectionView.dequeueReusableCellWithReuseIdentifier("calendarCell",forIndexPath: indexPath) as! CalendarCell
-//            if  indexPath.item < 7 && indexPath.item >= 0{
-//                cell.dateText.textColor = UIColor.blackColor()
-//                cell.dateText.text = TodoListHelper.getWeekDays()[indexPath.item];
-//            }
-//            else{
-            if indexPath.item >= date!.firstDay{
+            if  indexPath.item < 7 && indexPath.item >= 0{
+                cell.dateText.textColor = UIColor.blackColor()
+                cell.dateText.text = TodoListHelper.getWeekDays()[indexPath.item];
+            }
+            else{
+            if indexPath.item >= date!.firstDay - 1 + 7{
             
-                cell.dateText.text = String(indexPath.item + 1 - date!.firstDay)
+                cell.dateText.text = String(indexPath.item + 1 - (date!.firstDay-1) - 7)
             }
-            if self.indexPath == nil {
-                self.indexPath = indexPath
-            }
-//            }
+           }
             return cell
             
         default:
@@ -129,7 +126,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         case self.todoItemCollectionView:
             return todoItemList.count
         case self.calendarCollectionView:
-            return date!.daysCount + date!.firstDay
+            return date!.daysCount + date!.firstDay - 1 + 7
         default:
             return 0
         }
@@ -225,7 +222,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         date = CalendarHelper.loadCalendar(date!.year, currentMonth: date!.month)
         dateLbl.text = ("\(CalendarHelper.formatDate(date!.month)) \(String(date!.year))")
         
-        calendarCollectionView.reloadItemsAtIndexPaths([self.indexPath!])
+        calendarCollectionView.reloadData()
     }
     
     private func prepareUI(){
@@ -248,7 +245,8 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: confirmBtn)]
         todoItemList = TodoItemList.getAllTodoItems()
         
-        date = CalendarHelper.getCurrentDate()
+        //date = CalendarHelper.getCurrentDate()
+        date = CalendarHelper.loadCalendar(2016, currentMonth: 7)
         dateLbl.text = ("\(CalendarHelper.formatDate(date!.month)) \(String(date!.year))")
         
     }

@@ -29,20 +29,20 @@
                                 <rect key="frame" x="20" y="330" width="30" height="30"/>
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gMI-VF-LYx">
-                                <rect key="frame" x="37" y="447" width="341" height="269"/>
+                                <rect key="frame" x="37" y="413" width="341" height="315"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="2.5" id="CqR-q1-Zsy">
-                                    <size key="itemSize" width="45" height="45"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="5" id="CqR-q1-Zsy">
+                                    <size key="itemSize" width="40" height="40"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="calendarCell" id="gd2-oQ-E1h" customClass="CalendarCell" customModule="TodoList" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Huv-Oa-4zu">
@@ -61,7 +61,7 @@
                                 </cells>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iTU-dl-5G4">
-                                <rect key="frame" x="15" y="563" width="29" height="23"/>
+                                <rect key="frame" x="37" y="376" width="29" height="29"/>
                                 <state key="normal" image="arrowleft"/>
                                 <connections>
                                     <action selector="prevMth:" destination="PqH-Sh-OvC" eventType="touchUpInside" id="vBj-FL-dQU"/>
@@ -114,8 +114,8 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7lP-Yn-6GO">
-                                <rect key="frame" x="373" y="563" width="29" height="23"/>
-                                <state key="normal" title="&gt;" image="arrowright"/>
+                                <rect key="frame" x="349" y="376" width="29" height="29"/>
+                                <state key="normal" image="arrowright"/>
                                 <connections>
                                     <action selector="nextMth:" destination="PqH-Sh-OvC" eventType="touchUpInside" id="D6y-ne-JnX"/>
                                 </connections>
