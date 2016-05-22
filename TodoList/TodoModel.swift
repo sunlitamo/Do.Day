@@ -10,13 +10,12 @@ import UIKit
 
 class TodoModel: NSObject {
 
-    var id : String
+    
     var image : UIImage
     var title : String
-    var date : NSDate
+    var date : (year:Int,month:Int,day:Int)
     
-    init(id: String, image: UIImage, title: String, date: NSDate) {
-        self.id = id
+    init(image: UIImage, title: String, date: (year:Int,month:Int,day:Int)) {
         self.image = image
         self.title = title
         self.date = date

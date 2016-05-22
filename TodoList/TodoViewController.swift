@@ -82,7 +82,7 @@
         dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
         
         
-        cell.taskTimeTxt.text = dateFormatter.stringFromDate(todos[indexPath.row].date)
+        cell.taskTimeTxt.text = CalendarHelper.dateFormatter(todos[indexPath.row].date)
         
         cell.todoImg.image = todos[indexPath.row].image
         
@@ -131,28 +131,4 @@
     func reloadData(){
         toDoListTableView.reloadData()
     }
-    
-    //    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    //        let controller = segue.destinationViewController
-    //        controller.transitioningDelegate = self
-    //        controller.modalPresentationStyle = .Custom
-    //
-    //    }
-    
-    //
-    //    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    //        transition.transitionMode = .Present
-    //        transition.startingPoint = transitionButton!.center
-    //        transition.bubbleColor = transitionButton!.backgroundColor!
-    //        return transition
-    //    }
-    //
-    //    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    //        transition.transitionMode = .Dismiss
-    //        transition.startingPoint = transitionButton!.center
-    //        transition.bubbleColor = transitionButton!.backgroundColor!
-    //        return transition
-    //    }
-    
-    
  }

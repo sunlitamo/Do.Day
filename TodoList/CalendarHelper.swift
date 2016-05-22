@@ -10,6 +10,12 @@ import UIKit
 
 class CalendarHelper{
     
+    static func dateFormatter(date: (year:Int,month:Int,day:Int))->String{
+        
+        return "\(date.year)-\(date.month)-\(date.day)"
+        
+    }
+    
     static func loadCalendar(currentYear:Int,currentMonth:Int)->(year:Int,month:Int,firstDay:Int,daysCount:Int){
         
         let gregorian: NSCalendar = NSCalendar(calendarIdentifier:NSCalendarIdentifierGregorian)!

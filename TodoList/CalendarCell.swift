@@ -12,5 +12,7 @@ import UIKit
 class CalendarCell: UICollectionViewCell {
 
     @IBOutlet var dateText: UILabel!
+    
+    var cellTag: Int!
 
 }
