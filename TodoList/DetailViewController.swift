@@ -15,6 +15,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     @IBOutlet var todoItemCollectionView: UICollectionView!
     @IBOutlet var confirmBtn: UIButton!
     @IBOutlet var logBtn: UIButton!
+    @IBOutlet var locationBtn: UIButton!
     @IBOutlet var backBtn: UIButton!
     @IBOutlet var calendarBtn: UIButton!
     @IBOutlet var todoTxt: UITextField!
@@ -242,15 +243,24 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         
         
         logBtn = UIButton(type:.Custom)
-        logBtn.setImage(UIImage(named: "log"), forState: .Normal)
+        logBtn.setImage(UIImage(named: "edit"), forState: .Normal)
         logBtn.frame = CGRectMake(0, 0, 30, 30)
         logBtn.addTarget(self, action: #selector(confirmBtnTapped(_:)), forControlEvents: .TouchUpInside)
+        
+        locationBtn = UIButton(type:.Custom)
+        locationBtn.setImage(UIImage(named: "location"), forState: .Normal)
+        locationBtn.frame = CGRectMake(0, 0, 30, 30)
+        locationBtn.addTarget(self, action: #selector(confirmBtnTapped(_:)), forControlEvents: .TouchUpInside)
+
+        
+        let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: nil, action: nil)
+        fixedSpace.width = 30.0
         
         confirmBtn = UIButton(type:.Custom)
         confirmBtn.setImage(UIImage(named: "confirm"), forState: .Normal)
         confirmBtn.frame = CGRectMake(0, 0, 30, 30)
         confirmBtn.addTarget(self, action: #selector(confirmBtnTapped(_:)), forControlEvents: .TouchUpInside)
-        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: confirmBtn)]
+        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: confirmBtn),fixedSpace,UIBarButtonItem(customView: logBtn),fixedSpace,UIBarButtonItem(customView: locationBtn)]
         todoItemList = TodoItemList.getAllTodoItems()
         
         date = CalendarHelper.getCurrentDate()
