@@ -30,7 +30,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     var selectedCell = UIImageView()
     var todoItem:(item:TodoModel?,index:Int?,edit:Bool?)
     var todoItemList = [TodoItemList]()
-
+    
     private var date:(year:Int,month:Int,firstDay:Int,daysCount:Int)?
     
     override func viewDidLoad() {
@@ -53,7 +53,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             self.taskDate = model!.date
         }
         else{
-        todoItem.edit = false
+            todoItem.edit = false
         }
     }
     
@@ -113,21 +113,22 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
         case self.calendarCollectionView:
             let cell = calendarCollectionView.dequeueReusableCellWithReuseIdentifier("calendarCell",forIndexPath: indexPath) as! CalendarCell
-        
+            
             if  indexPath.item < 7 && indexPath.item >= 0 {
-                cell.dateText.textColor = UIColor.blackColor()
+                cell.dateText.textColor = indexPath.item == 0 ? UIColor.redColor() : UIColor.blackColor()
                 cell.dateText.text = TodoListHelper.getWeekDays()[indexPath.item];
-            } else {
-                cell.dateText.text = "";
             }
-        
-        
+            else {
+                cell.dateText.text = "";
+                cell.dateText.textColor = UIColor(red:0, green: 0.48025, blue:1, alpha:1)
+            }
+            
             if indexPath.item >= date!.firstDay - 1 + 7 {
                 cell.dateText.text = String(indexPath.item + 1 - (date!.firstDay-1) - 7)
             }
             
             if (cell.dateText.text! == String(taskDate!.day)) {
-                print("==> \(cell.dateText.text!),  ==> \(taskDate!.day)");
+                
                 selectedCell.removeFromSuperview();
                 
                 selectedCell = UIImageView()
@@ -138,7 +139,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
                 cell.contentView.addSubview(selectedCell)
                 cell.contentView.sendSubviewToBack(selectedCell)
             }
-
+            
             return cell
             
         default:
@@ -215,7 +216,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     }
     
     private func updateCalendar(year:Int,month:Int) {
-
+        
         if (month > 12) {
             date!.month=1;
             date!.year+=1;
