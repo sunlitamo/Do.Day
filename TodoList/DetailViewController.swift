@@ -24,15 +24,13 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     @IBOutlet var dateLbl: UILabel!
     
     private var taskImage:UIImage? = nil
-    
     private var taskDate:(year:Int,month:Int,day:Int)?
+    private var isInited : Bool?
     
     var selectedCell = UIImageView()
-    
     var todoItem:(item:TodoModel?,index:Int?,edit:Bool?)
-    
     var todoItemList = [TodoItemList]()
-    
+
     private var date:(year:Int,month:Int,firstDay:Int,daysCount:Int)?
     
     override func viewDidLoad() {
@@ -41,7 +39,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         todoItemCollectionView.delegate = self
         calendarCollectionView.dataSource = self
         calendarCollectionView.delegate = self
-        
+        isInited = false
         prepareUI()
         retrieveItemData(todoItem.item)
         
@@ -84,6 +82,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
                                         }})
         case self.calendarCollectionView:
             let cell = calendarCollectionView.cellForItemAtIndexPath(indexPath) as! CalendarCell
+            cell.isCellSelected = true
             
             guard indexPath.row > 6 else{return}
             
@@ -114,18 +113,23 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
         case self.calendarCollectionView:
             let cell = calendarCollectionView.dequeueReusableCellWithReuseIdentifier("calendarCell",forIndexPath: indexPath) as! CalendarCell
-            if  indexPath.item < 7 && indexPath.item >= 0{
+        
+            if  indexPath.item < 7 && indexPath.item >= 0 {
                 cell.dateText.textColor = UIColor.blackColor()
                 cell.dateText.text = TodoListHelper.getWeekDays()[indexPath.item];
+            } else {
+                cell.dateText.text = "";
             }
-            else{
-                if indexPath.item >= date!.firstDay - 1 + 7{
-                    
-                    cell.dateText.text = String(indexPath.item + 1 - (date!.firstDay-1) - 7)
-                }
+        
+        
+            if indexPath.item >= date!.firstDay - 1 + 7 {
+                cell.dateText.text = String(indexPath.item + 1 - (date!.firstDay-1) - 7)
             }
             
             if (cell.dateText.text! == String(taskDate!.day)) {
+                print("==> \(cell.dateText.text!),  ==> \(taskDate!.day)");
+                selectedCell.removeFromSuperview();
+                
                 selectedCell = UIImageView()
                 selectedCell.backgroundColor = UIColor.lightGrayColor()
                 selectedCell.frame = CGRectMake(0, 0, cell.frame.width, cell.frame.height)
@@ -134,7 +138,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
                 cell.contentView.addSubview(selectedCell)
                 cell.contentView.sendSubviewToBack(selectedCell)
             }
-            
+
             return cell
             
         default:
@@ -209,22 +213,26 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         date!.month+=1
         updateCalendar(date!.year, month: date!.month)
     }
-    private func updateCalendar(year:Int,month:Int){
-        if(month>12){
+    
+    private func updateCalendar(year:Int,month:Int) {
+
+        if (month > 12) {
             date!.month=1;
             date!.year+=1;
         }
+        
         if(month<1){
             date!.month=12;
             date!.year-=1;
         }
+        
         date = CalendarHelper.loadCalendar(date!.year, currentMonth: date!.month)
         dateLbl.text = ("\(CalendarHelper.formatDate(date!.month)) \(String(date!.year))")
         
         calendarCollectionView.reloadData()
     }
     
-    private func prepareUI(){
+    private func prepareUI() {
         backBtn = UIButton(type:.Custom)
         backBtn.setImage(UIImage(named: "back"), forState: .Normal)
         backBtn.frame = CGRectMake(0, 0, 25, 25)

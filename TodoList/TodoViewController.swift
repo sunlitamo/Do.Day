@@ -47,7 +47,7 @@
         self.view.insertSubview(transitionButton, aboveSubview: toDoListTableView)
     }
     
-    func setEditting(){
+    func setEditting() {
         switch toDoListTableView.editing {
         case false:
             print("false")
