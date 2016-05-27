@@ -11,26 +11,22 @@ import UIKit
 class DetailViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource {
     
     @IBOutlet var calendarCollectionView: UICollectionView!
-    
     @IBOutlet var todoItemCollectionView: UICollectionView!
-    @IBOutlet var confirmBtn: UIButton!
-    @IBOutlet var logBtn: UIButton!
-    @IBOutlet var backBtn: UIButton!
-    @IBOutlet var calendarBtn: UIButton!
+    
     @IBOutlet var todoTxt: UITextField!
     @IBOutlet var currentItemImg: UIImageView!
     @IBOutlet var previousMth: UIButton!
     @IBOutlet var nextMth: UIButton!
     @IBOutlet var dateLbl: UILabel!
     
-    private var taskImage:UIImage? = nil
-    private var taskDate:(year:Int,month:Int,day:Int)?
     private var isInited : Bool?
     
-    var selectedCell = UIImageView()
+    var selectedCycle = UIImageView()
+    private var taskImage:UIImage? = nil
+    private var taskDate:(year:Int,month:Int,day:Int)?
     var todoItem:(item:TodoModel?,index:Int?,edit:Bool?)
     var todoItemList = [TodoItemList]()
-
+    
     private var date:(year:Int,month:Int,firstDay:Int,daysCount:Int)?
     
     override func viewDidLoad() {
@@ -39,9 +35,11 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         todoItemCollectionView.delegate = self
         calendarCollectionView.dataSource = self
         calendarCollectionView.delegate = self
-        isInited = false
+        
         prepareUI()
         retrieveItemData(todoItem.item)
+        
+        isInited = false
         
     }
     
@@ -53,7 +51,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             self.taskDate = CalendarHelper.dateConverter_Closure(model!.taskDate!)
         }
         else{
-        todoItem.edit = false
+            todoItem.edit = false
         }
     }
     
@@ -87,14 +85,14 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
             self.taskDate = (date!.year, month: date!.month, day: Int(cell.dateText.text!)!)
             
-            selectedCell.removeFromSuperview()
-            selectedCell = UIImageView()
-            selectedCell.backgroundColor = UIColor.lightGrayColor()
-            selectedCell.frame = CGRectMake(0, 0, cell.frame.width, cell.frame.height)
-            selectedCell.transform = CGAffineTransformMakeRotation(CGFloat(45.0*M_PI/180.0))
-            selectedCell.layer.cornerRadius = 20
-            cell.contentView.addSubview(selectedCell)
-            cell.contentView.sendSubviewToBack(selectedCell)
+            selectedCycle.removeFromSuperview()
+            selectedCycle = UIImageView()
+            selectedCycle.backgroundColor = UIColor.lightGrayColor()
+            selectedCycle.frame = CGRectMake(0, 0, cell.frame.width, cell.frame.height)
+            selectedCycle.transform = CGAffineTransformMakeRotation(CGFloat(90.0*M_PI/180.0))
+            selectedCycle.layer.cornerRadius = 20
+            cell.contentView.addSubview(selectedCycle)
+            cell.contentView.sendSubviewToBack(selectedCycle)
             
         default:
             break
@@ -112,32 +110,33 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
         case self.calendarCollectionView:
             let cell = calendarCollectionView.dequeueReusableCellWithReuseIdentifier("calendarCell",forIndexPath: indexPath) as! CalendarCell
-        
+            
             if  indexPath.item < 7 && indexPath.item >= 0 {
-                cell.dateText.textColor = UIColor.blackColor()
+                cell.dateText.textColor = indexPath.item == 0 ? UIColor.redColor() : UIColor.blackColor()
                 cell.dateText.text = TodoListHelper.getWeekDays()[indexPath.item];
-            } else {
-                cell.dateText.text = "";
             }
-        
-        
+            else {
+                cell.dateText.text = "";
+                cell.dateText.textColor = UIColor(red:0, green: 0.48025, blue:1, alpha:1)
+            }
+            
             if indexPath.item >= date!.firstDay - 1 + 7 {
                 cell.dateText.text = String(indexPath.item + 1 - (date!.firstDay-1) - 7)
             }
             
             if (cell.dateText.text! == String(taskDate!.day)) {
-                print("==> \(cell.dateText.text!),  ==> \(taskDate!.day)");
-                selectedCell.removeFromSuperview();
                 
-                selectedCell = UIImageView()
-                selectedCell.backgroundColor = UIColor.lightGrayColor()
-                selectedCell.frame = CGRectMake(0, 0, cell.frame.width, cell.frame.height)
-                selectedCell.transform = CGAffineTransformMakeRotation(CGFloat(45.0*M_PI/180.0))
-                selectedCell.layer.cornerRadius = 20
-                cell.contentView.addSubview(selectedCell)
-                cell.contentView.sendSubviewToBack(selectedCell)
+                selectedCycle.removeFromSuperview();
+                
+                selectedCycle = UIImageView()
+                selectedCycle.backgroundColor = UIColor.lightGrayColor()
+                selectedCycle.frame = CGRectMake(0, 0, cell.frame.width, cell.frame.height)
+                selectedCycle.transform = CGAffineTransformMakeRotation(CGFloat(45.0*M_PI/180.0))
+                selectedCycle.layer.cornerRadius = 20
+                cell.contentView.addSubview(selectedCycle)
+                cell.contentView.sendSubviewToBack(selectedCycle)
             }
-
+            
             return cell
             
         default:
@@ -214,7 +213,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     }
     
     private func updateCalendar(year:Int,month:Int) {
-
+        
         if (month > 12) {
             date!.month=1;
             date!.year+=1;
@@ -232,23 +231,35 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     }
     
     private func prepareUI() {
-        backBtn = UIButton(type:.Custom)
+        let backBtn = UIButton(type:.Custom)
         backBtn.setImage(UIImage(named: "back"), forState: .Normal)
         backBtn.frame = CGRectMake(0, 0, 25, 25)
         backBtn.addTarget(self, action: #selector(dismiss), forControlEvents: .TouchUpInside)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBtn)
         
         
-        logBtn = UIButton(type:.Custom)
-        logBtn.setImage(UIImage(named: "log"), forState: .Normal)
+        let logBtn = UIButton(type:.Custom)
+        logBtn.setImage(UIImage(named: "edit"), forState: .Normal)
         logBtn.frame = CGRectMake(0, 0, 30, 30)
+        //FIXME impl of writting comments
         logBtn.addTarget(self, action: #selector(confirmBtnTapped(_:)), forControlEvents: .TouchUpInside)
         
-        confirmBtn = UIButton(type:.Custom)
+        let locationBtn = UIButton(type:.Custom)
+        locationBtn.setImage(UIImage(named: "location"), forState: .Normal)
+        locationBtn.frame = CGRectMake(0, 0, 30, 30)
+        //FIXME impl of getting location
+        locationBtn.addTarget(self, action: #selector(confirmBtnTapped(_:)), forControlEvents: .TouchUpInside)
+
+        
+        let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: nil, action: nil)
+        fixedSpace.width = 30.0
+        
+        let confirmBtn = UIButton(type:.Custom)
         confirmBtn.setImage(UIImage(named: "confirm"), forState: .Normal)
         confirmBtn.frame = CGRectMake(0, 0, 30, 30)
         confirmBtn.addTarget(self, action: #selector(confirmBtnTapped(_:)), forControlEvents: .TouchUpInside)
-        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: confirmBtn)]
+        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: confirmBtn),fixedSpace,UIBarButtonItem(customView: logBtn),fixedSpace,UIBarButtonItem(customView: locationBtn)]
+        
         todoItemList = TodoItemList.getAllTodoItems()
         
         date = CalendarHelper.getCurrentDate()

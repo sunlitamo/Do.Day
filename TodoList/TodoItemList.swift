@@ -32,9 +32,9 @@ class TodoItemList: NSObject {
         TodoItemArray.append(TodoItemList(title: "Study",image: UIImage(named: "study")!))
         TodoItemArray.append(TodoItemList(title: "Laundry",image: UIImage(named: "wash")!))
         TodoItemArray.append(TodoItemList(title: "Date",image: UIImage(named: "date")!))
-        TodoItemArray.append(TodoItemList(title: "Swimming",image: UIImage(named: "swim")!))
-        TodoItemArray.append(TodoItemList(title: "Bill",image: UIImage(named: "salary")!))
         TodoItemArray.append(TodoItemList(title: "Meditation",image: UIImage(named: "calm")!))
+        TodoItemArray.append(TodoItemList(title: "Bill",image: UIImage(named: "salary")!))
+        TodoItemArray.append(TodoItemList(title: "Swimming",image: UIImage(named: "swim")!))
         TodoItemArray.append(TodoItemList(title: "Tea Break",image: UIImage(named: "tea")!))
         TodoItemArray.append(TodoItemList(title: "Relax",image: UIImage(named: "relax")!))
         
