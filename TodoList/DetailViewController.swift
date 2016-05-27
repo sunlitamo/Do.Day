@@ -49,8 +49,8 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     func retrieveItemData(model:TodoModel?) {
         if model != nil {
             todoTxt.text = model!.title
-            self.currentItemImg.image = model!.image
-            self.taskDate = model!.date
+            self.currentItemImg.image = UIImage(data: model!.image!)
+            self.taskDate = CalendarHelper.dateConverter_Closure(model!.taskDate!)
         }
         else{
         todoItem.edit = false
@@ -82,7 +82,6 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
                                         }})
         case self.calendarCollectionView:
             let cell = calendarCollectionView.cellForItemAtIndexPath(indexPath) as! CalendarCell
-            cell.isCellSelected = true
             
             guard indexPath.row > 6 else{return}
             

@@ -72,6 +72,20 @@ class CalendarHelper{
             return ""
         }
     }
+    static func dateConverter_NSdate(date: (year:Int,month:Int,day:Int))->NSDate{
+    
+        let strDate = "\(date.year)-\(date.month)-\(date.day)" // "2015-10-06T15:42:34Z"
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter.dateFromString(strDate)!
+    }
+    
+    static func dateConverter_Closure(date:NSDate)->(Int,Int,Int){
+        let gregorian: NSCalendar = NSCalendar(calendarIdentifier:NSCalendarIdentifierGregorian)!
+        let components: NSDateComponents = gregorian.components([.Year,.Month,.Weekday],fromDate: date)
+        return (components.year,components.month,components.day)
+    }
+
 }
 extension NSDate{
     
