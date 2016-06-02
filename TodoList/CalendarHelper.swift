@@ -74,7 +74,7 @@ class CalendarHelper{
     }
     static func dateConverter_NSdate(date: (year:Int,month:Int,day:Int))->NSDate{
     
-        let strDate = "\(date.year)-\(date.month)-\(date.day)" // "2015-10-06T15:42:34Z"
+        let strDate = "\(date.year)-\(date.month)-\(date.day)"
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter.dateFromString(strDate)!
@@ -85,6 +85,13 @@ class CalendarHelper{
         let components: NSDateComponents = gregorian.components([.Year,.Month,.Weekday],fromDate: date)
         return (components.year,components.month,components.day)
     }
+    
+    static func dateConverter_String(date:NSDate)->String{
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter.stringFromDate(date)
+    }
+
 
 }
 extension NSDate{

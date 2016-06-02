@@ -8,8 +8,18 @@
 
 import Foundation
 import CoreData
-
+import UIKit
 
 class TodoModel: NSManagedObject {
 
+//   convenience init(image:UIImage?,title:String,date: (year:Int,month:Int,day:Int)){
+//        
+//        self.image = UIImagePNGRepresentation(image!)
+//        self.taskDate = CalendarHelper.dateConverter_NSdate(date)
+//        self.title = title
+//    
+//    }
+//    
+
+    
 }

@@ -23,6 +23,7 @@
 		E9B38E5B1CD822C100BC27E1 /* TodoCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B38E5A1CD822C100BC27E1 /* TodoCollectionCell.swift */; };
 		E9B38E5D1CD825E300BC27E1 /* TodoItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B38E5C1CD825E300BC27E1 /* TodoItemList.swift */; };
 		E9EB539F1CDDBCB300E0EFCB /* TodoListHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EB539E1CDDBCB300E0EFCB /* TodoListHelper.swift */; };
+		E9F137161CF9ECF900A042F2 /* DataModelHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F137151CF9ECF900A042F2 /* DataModelHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,11 +40,12 @@
 		E99BA7E31CC62BB900860CB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E99BA7E61CC62BB900860CB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E99BA7E81CC62BB900860CB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E9ABC1B81CF7465D00EBCE4D /* TodoModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TodoModel+CoreDataProperties.swift"; path = "TodoList/TodoModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		E9ABC1B91CF7465D00EBCE4D /* TodoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TodoModel.swift; path = TodoList/TodoModel.swift; sourceTree = "<group>"; };
+		E9ABC1B81CF7465D00EBCE4D /* TodoModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TodoModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		E9ABC1B91CF7465D00EBCE4D /* TodoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoModel.swift; sourceTree = "<group>"; };
 		E9B38E5A1CD822C100BC27E1 /* TodoCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoCollectionCell.swift; sourceTree = "<group>"; };
 		E9B38E5C1CD825E300BC27E1 /* TodoItemList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoItemList.swift; sourceTree = "<group>"; };
 		E9EB539E1CDDBCB300E0EFCB /* TodoListHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoListHelper.swift; sourceTree = "<group>"; };
+		E9F137151CF9ECF900A042F2 /* DataModelHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModelHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,8 @@
 		E998B6BB1CD5C3F80001CCBF /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E9ABC1B81CF7465D00EBCE4D /* TodoModel+CoreDataProperties.swift */,
+				E9ABC1B91CF7465D00EBCE4D /* TodoModel.swift */,
 				E9B38E5C1CD825E300BC27E1 /* TodoItemList.swift */,
 			);
 			name = Model;
@@ -92,6 +96,7 @@
 				E9EB539E1CDDBCB300E0EFCB /* TodoListHelper.swift */,
 				E988D1DF1CDE0C94004C156E /* CalendarHelper.swift */,
 				E96424CE1CF7415400073BEA /* DataController.swift */,
+				E9F137151CF9ECF900A042F2 /* DataModelHelper.swift */,
 			);
 			name = Helper;
 			sourceTree = "<group>";
@@ -99,8 +104,6 @@
 		E99BA7D01CC62BB800860CB0 = {
 			isa = PBXGroup;
 			children = (
-				E9ABC1B81CF7465D00EBCE4D /* TodoModel+CoreDataProperties.swift */,
-				E9ABC1B91CF7465D00EBCE4D /* TodoModel.swift */,
 				E99BA7DB1CC62BB900860CB0 /* TodoList */,
 				E99BA7DA1CC62BB900860CB0 /* Products */,
 			);
@@ -211,6 +214,7 @@
 				E94DF9851CE3767500BEA74E /* CalendarCell.swift in Sources */,
 				E9ABC1BB1CF7465D00EBCE4D /* TodoModel.swift in Sources */,
 				E96424CB1CF5F37700073BEA /* TodoItemDataModel.xcdatamodeld in Sources */,
+				E9F137161CF9ECF900A042F2 /* DataModelHelper.swift in Sources */,
 				E96424CF1CF7415400073BEA /* DataController.swift in Sources */,
 				E9ABC1BA1CF7465D00EBCE4D /* TodoModel+CoreDataProperties.swift in Sources */,
 			);

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DetailViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource {
     
@@ -29,6 +30,8 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     
     private var date:(year:Int,month:Int,firstDay:Int,daysCount:Int)?
     
+    let moc = DataController().managedObjectContext
+    
     override func viewDidLoad() {
         
         todoItemCollectionView.dataSource = self
@@ -48,6 +51,8 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         if model != nil {
             todoTxt.text = model!.title
             self.currentItemImg.image = UIImage(data: model!.image!)
+            
+            //FIXME : 获取的day 不对
             self.taskDate = CalendarHelper.dateConverter_Closure(model!.taskDate!)
         }
         else{
@@ -171,12 +176,13 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         switch todoItem.edit! {
             
         case true:
-            todos[todoItem.index!] = TodoModel(image: taskImage!, title: todoTxt.text!, date: (self.taskDate!.year, month: self.taskDate!.month, day: self.taskDate!.day))
+            updateStorage()
             
         case false:
-            let item = TodoModel(image: taskImage!, title: todoTxt.text!, date: (self.taskDate!.year, month: self.taskDate!.month, day: self.taskDate!.day))
-            todos.append(item)
+            addToStorage()
         }
+        do{try moc.save()}
+        catch{fatalError()}
         
         dismiss()
         
@@ -249,7 +255,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         locationBtn.frame = CGRectMake(0, 0, 30, 30)
         //FIXME impl of getting location
         locationBtn.addTarget(self, action: #selector(confirmBtnTapped(_:)), forControlEvents: .TouchUpInside)
-
+        
         
         let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: nil, action: nil)
         fixedSpace.width = 30.0
@@ -271,4 +277,24 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         
         self.taskDate = (date!.year,date!.month,currentDay)
     }
+    
+    private func addToStorage(){
+        
+        let entity = NSEntityDescription.insertNewObjectForEntityForName("TodoModel", inManagedObjectContext: moc) as! TodoModel
+        
+        entity .setValue(UIImagePNGRepresentation(taskImage!), forKey: "image")
+        entity .setValue(todoTxt.text!, forKey: "title")
+        entity .setValue(CalendarHelper.dateConverter_NSdate((self.taskDate!.year, month: self.taskDate!.month, day: self.taskDate!.day)), forKey: "taskDate")
+    }
+    
+    
+    private func updateStorage(){
+        
+        if ((todoItem.item) != nil) {
+            todoItem.item!.setValue(UIImagePNGRepresentation(taskImage!), forKey: "image")
+            todoItem.item!.setValue(todoTxt.text!, forKey: "title")
+            todoItem.item!.setValue(CalendarHelper.dateConverter_NSdate((self.taskDate!.year, month: self.taskDate!.month, day: self.taskDate!.day)), forKey: "taskDate")
+        }
+    }
+    
 }

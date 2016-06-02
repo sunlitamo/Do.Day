@@ -18,11 +18,4 @@ extension TodoModel {
     @NSManaged var taskDate: NSDate?
     @NSManaged var title: String?
 
-    convenience init(image:UIImage?,title:String,date: (year:Int,month:Int,day:Int)){
-    
-        self.image = UIImagePNGRepresentation(image!)
-        self.taskDate = CalendarHelper.dateConverter_NSdate(date)
-        self.title = title
-    }
-    
 }
