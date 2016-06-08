@@ -131,11 +131,43 @@
                         <outlet property="dateLbl" destination="YGN-ge-Vr0" id="9Ng-6L-gOG"/>
                         <outlet property="todoItemCollectionView" destination="dNQ-gm-pIE" id="k6d-BK-l46"/>
                         <outlet property="todoTxt" destination="dCQ-RR-kl1" id="AeD-vU-BDk"/>
+                        <segue destination="pEv-BF-edc" kind="popover" identifier="addLog" id="6Qy-Oc-vYZ">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dZ5-wJ-5RB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1651" y="55"/>
+            <point key="canvasLocation" x="452" y="141"/>
+        </scene>
+        <!--Task Log View Controller-->
+        <scene sceneID="3Mh-6y-i69">
+            <objects>
+                <viewController storyboardIdentifier="TaskLogViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="pEv-BF-edc" customClass="TaskLogViewController" customModule="TodoList" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="AHW-ib-AmN"/>
+                        <viewControllerLayoutGuide type="bottom" id="MaN-Bh-Kir"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="e1u-g2-fMq">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="test" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dAy-IE-T4s">
+                                <rect key="frame" x="193" y="216" width="30" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="iXz-kf-EyM"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="414" height="300"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ksh-1b-feC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1054" y="71"/>
         </scene>
         <!--Todo View Controller-->
         <scene sceneID="H68-Il-0NF">
@@ -197,7 +229,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qrV-h8-AFY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1144" y="963"/>
+            <point key="canvasLocation" x="28" y="1063"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="jk7-jE-P8i">
@@ -215,7 +247,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pxd-Lu-X24" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="874" y="95"/>
+            <point key="canvasLocation" x="-242" y="195"/>
         </scene>
     </scenes>
     <resources>

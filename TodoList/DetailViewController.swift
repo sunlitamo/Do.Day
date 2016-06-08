@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class DetailViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource {
+class DetailViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UIPopoverControllerDelegate {
     
     @IBOutlet var calendarCollectionView: UICollectionView!
     @IBOutlet var todoItemCollectionView: UICollectionView!
@@ -19,6 +19,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     @IBOutlet var previousMth: UIButton!
     @IBOutlet var nextMth: UIButton!
     @IBOutlet var dateLbl: UILabel!
+
     
     private var isInited : Bool?
     
@@ -53,6 +54,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             self.currentItemImg.image = UIImage(data: model!.image!)
             
             //FIXME : 获取的day 不对
+            
             self.taskDate = CalendarHelper.dateConverter_Closure(model!.taskDate!)
         }
         else{
@@ -86,8 +88,11 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         case self.calendarCollectionView:
             let cell = calendarCollectionView.cellForItemAtIndexPath(indexPath) as! CalendarCell
             
-            guard indexPath.row > 6 else{return}
+            guard indexPath.item > 6 else{return}
             
+            guard indexPath.item >= date!.firstDay - 1 + 7  else{
+                return}
+
             self.taskDate = (date!.year, month: date!.month, day: Int(cell.dateText.text!)!)
             
             selectedCycle.removeFromSuperview()
@@ -188,10 +193,25 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         
     }
     
+    func addlog(sender: UIButton){
+        
+        let logVC = TaskLogViewController()
+        
+        let popOverController = UIPopoverController(contentViewController: logVC)
+        popOverController.delegate = self
+        popOverController.presentPopoverFromRect(sender.frame, inView: self.view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
+    }
+    
     func dismiss(){
         self.navigationController?.popViewControllerAnimated(true)
         NSNotificationCenter.defaultCenter().postNotificationName("reload", object: nil)
+       
     }
+    
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .None
+    }
+
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -248,13 +268,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         logBtn.setImage(UIImage(named: "edit"), forState: .Normal)
         logBtn.frame = CGRectMake(0, 0, 30, 30)
         //FIXME impl of writting comments
-        logBtn.addTarget(self, action: #selector(confirmBtnTapped(_:)), forControlEvents: .TouchUpInside)
-        
-        let locationBtn = UIButton(type:.Custom)
-        locationBtn.setImage(UIImage(named: "location"), forState: .Normal)
-        locationBtn.frame = CGRectMake(0, 0, 30, 30)
-        //FIXME impl of getting location
-        locationBtn.addTarget(self, action: #selector(confirmBtnTapped(_:)), forControlEvents: .TouchUpInside)
+        logBtn.addTarget(self, action: #selector(addlog(_:)), forControlEvents: .TouchUpInside)
         
         
         let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: nil, action: nil)
@@ -264,7 +278,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         confirmBtn.setImage(UIImage(named: "confirm"), forState: .Normal)
         confirmBtn.frame = CGRectMake(0, 0, 30, 30)
         confirmBtn.addTarget(self, action: #selector(confirmBtnTapped(_:)), forControlEvents: .TouchUpInside)
-        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: confirmBtn),fixedSpace,UIBarButtonItem(customView: logBtn),fixedSpace,UIBarButtonItem(customView: locationBtn)]
+        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: confirmBtn),fixedSpace,UIBarButtonItem(customView: logBtn)]
         
         todoItemList = TodoItemList.getAllTodoItems()
         
