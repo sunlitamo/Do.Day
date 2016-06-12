@@ -9,16 +9,19 @@
  import UIKit
  import CoreData
  
- var todos: [TodoModel] = []
+ //FIXME Can not load tableview correctly
+
+ 
  class TodoViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
     
     @IBOutlet var toDoListTableView: UITableView!
-    var transitionButton: UIButton!
+    var addButton: UIButton!
     var editButton: UIButton!
     var doneButton: UIButton!
     
-    
+    var todos: [TodoModel] = []
     let moc = DataController().managedObjectContext
+    
     
     override func viewDidLoad() {
         
@@ -28,7 +31,8 @@
         NSNotificationCenter.defaultCenter().addObserver(self,selector: #selector(reloadData), name: "reload", object: nil)
         
         prepareUI()
-        readFromStorage()
+        reloadData()
+        
     }
     
     func setEditting() {
@@ -39,7 +43,7 @@
             toDoListTableView.setEditing(true, animated: true)
             editButton.selected = true
         case true:
-    
+            
             super.setEditing(false, animated: true)
             toDoListTableView.setEditing(false, animated: true)
             editButton.selected = false
@@ -69,6 +73,10 @@
         cell.taskTimeTxt.text = CalendarHelper.dateConverter_String(todos[indexPath.row].taskDate!)
         
         cell.todoImg.image = UIImage(data:todos[indexPath.row].image!)
+        
+        cell.todoImg.frame = CGRectMake(8, 10, 50, 50)
+        cell.despTxt.frame = CGRectMake(56, 10, (cell.frame.width)-30, 20)
+        cell.taskTimeTxt.frame = CGRectMake((cell.frame.width)-30, 40, (cell.frame.width)-30, 20)
         
         return cell
     }
@@ -106,7 +114,7 @@
         todos.insert(todo, atIndex: destinationIndexPath.row)
         moc.insertObject(todo)
         
-         do{try moc.save()}catch{fatalError()}
+        do{try moc.save()}catch{fatalError()}
     }
     
     func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -119,32 +127,32 @@
     }
     
     func reloadData(){
-        readFromStorage()
+        
+        loadCoreData()
+        
         toDoListTableView.reloadData()
     }
     
-    
-    private func readFromStorage(){
+    func loadCoreData() {
         
         let fetch = NSFetchRequest(entityName:"TodoModel")
         
-        do{
-            todos = try moc.executeFetchRequest(fetch) as! [TodoModel]
-        }
-        catch{
-            fatalError()
-        }
+        do{let data = try moc.executeFetchRequest(fetch) as! [TodoModel]
+        todos = data}
+
+            
+        catch{fatalError()}
     }
     
     private func prepareUI(){
         navigationItem.leftBarButtonItem = editButtonItem()
-        transitionButton = UIButton(type:.Custom)
-        transitionButton!.backgroundColor = UIColor.darkGrayColor()
-        transitionButton!.frame = CGRectMake((self.view.frame.width)-70, (self.view.frame.height)-80, 50, 50)
-        transitionButton.transform = CGAffineTransformMakeRotation(CGFloat(45.0*M_PI/180.0))
-        transitionButton!.layer.cornerRadius = 25
-        transitionButton.setImage(UIImage(named:"addWhiteSmall"), forState:.Normal)
-        transitionButton!.addTarget(self, action: #selector(viewTransfer), forControlEvents: .TouchUpInside)
+        addButton = UIButton(type:.Custom)
+        addButton!.backgroundColor = UIColor.darkGrayColor()
+        addButton!.frame = CGRectMake((self.view.frame.width)-70, (self.view.frame.height)-80, 50, 50)
+        addButton.transform = CGAffineTransformMakeRotation(CGFloat(45.0*M_PI/180.0))
+        addButton!.layer.cornerRadius = 25
+        addButton.setImage(UIImage(named:"addWhiteSmall"), forState:.Normal)
+        addButton!.addTarget(self, action: #selector(viewTransfer), forControlEvents: .TouchUpInside)
         
         editButton = UIButton(type:.Custom)
         editButton!.setImage(UIImage(named:"edit"), forState:.Normal)
@@ -153,7 +161,8 @@
         editButton!.addTarget(self, action: #selector(setEditting), forControlEvents:.TouchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: editButton)
         
-        self.view.insertSubview(transitionButton, aboveSubview: toDoListTableView)
+        
+        self.view.insertSubview(addButton, aboveSubview: toDoListTableView)
         
     }
     

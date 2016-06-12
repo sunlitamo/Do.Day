@@ -19,9 +19,6 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     @IBOutlet var previousMth: UIButton!
     @IBOutlet var nextMth: UIButton!
     @IBOutlet var dateLbl: UILabel!
-
-    
-    private var isInited : Bool?
     
     var selectedCycle = UIImageView()
     private var taskImage:UIImage? = nil
@@ -29,9 +26,9 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     var todoItem:(item:TodoModel?,index:Int?,edit:Bool?)
     var todoItemList = [TodoItemList]()
     
-    private var date:(year:Int,month:Int,firstDay:Int,daysCount:Int)?
-    
     let moc = DataController().managedObjectContext
+    
+    private var date:(year:Int,month:Int,firstDay:Int,daysCount:Int)?
     
     override func viewDidLoad() {
         
@@ -43,18 +40,15 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         prepareUI()
         retrieveItemData(todoItem.item)
         
-        isInited = false
-        
     }
     
-    //FIXME
     func retrieveItemData(model:TodoModel?) {
         if model != nil {
+            
             todoTxt.text = model!.title
+            
             self.currentItemImg.image = UIImage(data: model!.image!)
-            
-            //FIXME : 获取的day 不对
-            
+            self.taskImage = self.currentItemImg.image
             self.taskDate = CalendarHelper.dateConverter_Closure(model!.taskDate!)
         }
         else{
@@ -92,15 +86,11 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
             guard indexPath.item >= date!.firstDay - 1 + 7  else{
                 return}
-
+            
             self.taskDate = (date!.year, month: date!.month, day: Int(cell.dateText.text!)!)
             
-            selectedCycle.removeFromSuperview()
-            selectedCycle = UIImageView()
-            selectedCycle.backgroundColor = UIColor.lightGrayColor()
-            selectedCycle.frame = CGRectMake(0, 0, cell.frame.width, cell.frame.height)
-            selectedCycle.transform = CGAffineTransformMakeRotation(CGFloat(90.0*M_PI/180.0))
-            selectedCycle.layer.cornerRadius = 20
+            configSelectedCell()
+            
             cell.contentView.addSubview(selectedCycle)
             cell.contentView.sendSubviewToBack(selectedCycle)
             
@@ -121,6 +111,10 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         case self.calendarCollectionView:
             let cell = calendarCollectionView.dequeueReusableCellWithReuseIdentifier("calendarCell",forIndexPath: indexPath) as! CalendarCell
             
+              if(DeviceType.IS_IPHONE_6P){
+            
+            }
+            
             if  indexPath.item < 7 && indexPath.item >= 0 {
                 cell.dateText.textColor = indexPath.item == 0 ? UIColor.redColor() : UIColor.blackColor()
                 cell.dateText.text = TodoListHelper.getWeekDays()[indexPath.item];
@@ -136,13 +130,8 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
             if (cell.dateText.text! == String(taskDate!.day)) {
                 
-                selectedCycle.removeFromSuperview();
+                configSelectedCell()
                 
-                selectedCycle = UIImageView()
-                selectedCycle.backgroundColor = UIColor.lightGrayColor()
-                selectedCycle.frame = CGRectMake(0, 0, cell.frame.width, cell.frame.height)
-                selectedCycle.transform = CGAffineTransformMakeRotation(CGFloat(45.0*M_PI/180.0))
-                selectedCycle.layer.cornerRadius = 20
                 cell.contentView.addSubview(selectedCycle)
                 cell.contentView.sendSubviewToBack(selectedCycle)
             }
@@ -192,26 +181,15 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         dismiss()
         
     }
-    
-    func addlog(sender: UIButton){
-        
-        let logVC = TaskLogViewController()
-        
-        let popOverController = UIPopoverController(contentViewController: logVC)
-        popOverController.delegate = self
-        popOverController.presentPopoverFromRect(sender.frame, inView: self.view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
-    }
-    
     func dismiss(){
         self.navigationController?.popViewControllerAnimated(true)
         NSNotificationCenter.defaultCenter().postNotificationName("reload", object: nil)
-       
     }
     
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
         return .None
     }
-
+    
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -264,12 +242,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBtn)
         
         
-        let logBtn = UIButton(type:.Custom)
-        logBtn.setImage(UIImage(named: "edit"), forState: .Normal)
-        logBtn.frame = CGRectMake(0, 0, 30, 30)
-        //FIXME impl of writting comments
-        logBtn.addTarget(self, action: #selector(addlog(_:)), forControlEvents: .TouchUpInside)
-        
+        //TODO impl of writting comments in version 1.1
         
         let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: nil, action: nil)
         fixedSpace.width = 30.0
@@ -278,7 +251,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         confirmBtn.setImage(UIImage(named: "confirm"), forState: .Normal)
         confirmBtn.frame = CGRectMake(0, 0, 30, 30)
         confirmBtn.addTarget(self, action: #selector(confirmBtnTapped(_:)), forControlEvents: .TouchUpInside)
-        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: confirmBtn),fixedSpace,UIBarButtonItem(customView: logBtn)]
+        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: confirmBtn)]
         
         todoItemList = TodoItemList.getAllTodoItems()
         
@@ -309,6 +282,21 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             todoItem.item!.setValue(todoTxt.text!, forKey: "title")
             todoItem.item!.setValue(CalendarHelper.dateConverter_NSdate((self.taskDate!.year, month: self.taskDate!.month, day: self.taskDate!.day)), forKey: "taskDate")
         }
+    }
+    
+    private func configSelectedCell(){
+        selectedCycle.removeFromSuperview()
+        selectedCycle = UIImageView()
+        selectedCycle.backgroundColor = UIColor.lightGrayColor()
+        if(DeviceType.IS_IPHONE_6P){
+            selectedCycle.frame = CGRectMake(0, 0, 40, 40)
+            selectedCycle.layer.cornerRadius = 20
+        }
+        else{
+            selectedCycle.frame = CGRectMake(5, 0, 30, 30)
+            selectedCycle.layer.cornerRadius = 15
+        }
+        selectedCycle.transform = CGAffineTransformMakeRotation(CGFloat(90.0*M_PI/180.0))
     }
     
 }

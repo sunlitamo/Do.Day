@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 class DataController: NSObject {
-    var managedObjectContext: NSManagedObjectContext
+    var managedObjectContext:NSManagedObjectContext
     override init() {
         // This resource is the same name as your xcdatamodeld contained in your project.
         guard let modelURL = NSBundle.mainBundle().URLForResource("TodoItemDataModel", withExtension:"momd") else {
