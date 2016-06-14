@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class DetailViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UIPopoverControllerDelegate {
+class DetailViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource{
     
     @IBOutlet var calendarCollectionView: UICollectionView!
     @IBOutlet var todoItemCollectionView: UICollectionView!
@@ -56,6 +56,44 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         }
     }
     
+    //FIXME Modify here
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        
+        switch collectionView {
+        case self.todoItemCollectionView:
+            
+            return CGSizeMake(40, 40);
+            
+        case self.calendarCollectionView:
+        
+            var size = CGSizeMake(0, 0);
+            
+            if(DeviceType.IS_IPHONE_4){
+                size = CGSizeMake(20, 30);
+            }
+
+            if(DeviceType.IS_IPHONE_5){
+                size = CGSizeMake(28, 18);
+            }
+
+            if(DeviceType.IS_IPHONE_6){
+                size = CGSizeMake(35, 30);
+            }
+
+            if(DeviceType.IS_IPHONE_6P){
+            size = CGSizeMake(40, 30);
+            }
+            return size;
+         
+        default:
+            return CGSizeMake(0, 0);
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        let leftRightInset = self.view.frame.size.width / 14.0
+        return UIEdgeInsetsMake(0, leftRightInset, 0, leftRightInset)
+    }
     
     //UICollection delegate method
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
@@ -110,10 +148,6 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
         case self.calendarCollectionView:
             let cell = calendarCollectionView.dequeueReusableCellWithReuseIdentifier("calendarCell",forIndexPath: indexPath) as! CalendarCell
-            
-              if(DeviceType.IS_IPHONE_6P){
-            
-            }
             
             if  indexPath.item < 7 && indexPath.item >= 0 {
                 cell.dateText.textColor = indexPath.item == 0 ? UIColor.redColor() : UIColor.blackColor()
