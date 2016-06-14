@@ -26,6 +26,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     var todoItem:(item:TodoModel?,index:Int?,edit:Bool?)
     var todoItemList = [TodoItemList]()
     
+    @IBOutlet var toDoViewHeight: NSLayoutConstraint!
     let moc = DataController().managedObjectContext
     
     private var date:(year:Int,month:Int,firstDay:Int,daysCount:Int)?
@@ -57,31 +58,41 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     }
     
     //FIXME Modify here
+    // 1. selectedCell 位置不对
+    // 2. 图片大小失真
+    // 3. 文字栏及日历挂件位置应该上移
+
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
         switch collectionView {
         case self.todoItemCollectionView:
-            
-            return CGSizeMake(40, 40);
+            var size = CGSizeMake(0, 0);
+           
+            if(DeviceType.IS_IPHONE_5){
+                size = CGSizeMake(38, 48);
+            }
+            if(DeviceType.IS_IPHONE_6){
+            size = CGSizeMake(45, 55);
+            }
+            if(DeviceType.IS_IPHONE_6P){
+                size = CGSizeMake(50, 60);
+            }
+            return size;
             
         case self.calendarCollectionView:
         
             var size = CGSizeMake(0, 0);
-            
-            if(DeviceType.IS_IPHONE_4){
-                size = CGSizeMake(20, 30);
-            }
 
             if(DeviceType.IS_IPHONE_5){
-                size = CGSizeMake(28, 18);
+                size = CGSizeMake(28, 23);
             }
 
             if(DeviceType.IS_IPHONE_6){
-                size = CGSizeMake(35, 30);
+                size = CGSizeMake(38, 33);
             }
 
             if(DeviceType.IS_IPHONE_6P){
-            size = CGSizeMake(40, 30);
+            size = CGSizeMake(40, 35);
             }
             return size;
          
@@ -176,6 +187,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             return UICollectionViewCell()
         }
     }
+    
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
@@ -297,7 +309,31 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         let currentDay = NSCalendar.currentCalendar().components([.Day], fromDate: NSDate()).day
         
         self.taskDate = (date!.year,date!.month,currentDay)
+        OptimizeUI()
     }
+    
+    private func OptimizeUI(){
+    
+        if(DeviceType.IS_IPHONE_5){
+        
+            toDoViewHeight.constant = 210
+            
+        }
+        if(DeviceType.IS_IPHONE_6){
+            toDoViewHeight.constant = 230
+        }
+        if(DeviceType.IS_IPHONE_6P){
+        }
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
     private func addToStorage(){
         

@@ -117,8 +117,8 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="257" id="TbC-SG-xkn"/>
                                 </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="5" id="K2P-y6-W88">
-                                    <size key="itemSize" width="60" height="70"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Uz5-he-Dcb">
+                                    <size key="itemSize" width="50" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -192,6 +192,7 @@
                         <outlet property="calendarCollectionView" destination="gMI-VF-LYx" id="F2C-8R-wlz"/>
                         <outlet property="currentItemImg" destination="uBi-Re-tOo" id="LAT-Df-g5j"/>
                         <outlet property="dateLbl" destination="YGN-ge-Vr0" id="9Ng-6L-gOG"/>
+                        <outlet property="toDoViewHeight" destination="TbC-SG-xkn" id="RVq-26-Pvi"/>
                         <outlet property="todoItemCollectionView" destination="dNQ-gm-pIE" id="k6d-BK-l46"/>
                         <outlet property="todoTxt" destination="dCQ-RR-kl1" id="AeD-vU-BDk"/>
                     </connections>
