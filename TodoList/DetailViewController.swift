@@ -59,8 +59,6 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     
     //FIXME Modify here
     // 1. selectedCell 位置不对
-    // 2. 图片大小失真
-    // 3. 文字栏及日历挂件位置应该上移
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
@@ -88,7 +86,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             }
 
             if(DeviceType.IS_IPHONE_6){
-                size = CGSizeMake(38, 33);
+                size = CGSizeMake(35, 30);
             }
 
             if(DeviceType.IS_IPHONE_6P){
@@ -153,6 +151,9 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         case self.todoItemCollectionView:
             let cell = todoItemCollectionView.dequeueReusableCellWithReuseIdentifier("todoCollectionCell",forIndexPath: indexPath) as! TodoCollectionCell
             cell.despTxt.text = todoItemList[indexPath.row].title
+            if (DeviceType.IS_IPHONE_5) {
+                cell.despTxt.font = cell.despTxt.font.fontWithSize(8)
+            }
             cell.todoImg.image = todoItemList[indexPath.row].image
             return cell
             
@@ -173,9 +174,13 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
                 cell.dateText.text = String(indexPath.item + 1 - (date!.firstDay-1) - 7)
             }
             
+            if (DeviceType.IS_IPHONE_5) {
+                cell.dateText.font = cell.dateText.font.fontWithSize(13)
+            }
+            
             if (cell.dateText.text! == String(taskDate!.day)) {
                 
-                configSelectedCell()
+                configSelectedCell(	)
                 
                 cell.contentView.addSubview(selectedCycle)
                 cell.contentView.sendSubviewToBack(selectedCycle)
