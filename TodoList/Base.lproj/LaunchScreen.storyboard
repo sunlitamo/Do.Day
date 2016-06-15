@@ -17,14 +17,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="ubg-f9-CSD">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="ubg-f9-CSD">
                                 <rect key="frame" x="210" y="210" width="180" height="180"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="ubg-f9-CSD" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="JUo-rJ-3pN"/>
-                            <constraint firstItem="ubg-f9-CSD" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="PSC-N8-T0o"/>
+                            <constraint firstItem="ubg-f9-CSD" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="O9a-ra-6Pe"/>
+                            <constraint firstItem="ubg-f9-CSD" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="kwY-pe-gD2"/>
                         </constraints>
                     </view>
                 </viewController>

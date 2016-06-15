@@ -26,6 +26,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     var todoItem:(item:TodoModel?,index:Int?,edit:Bool?)
     var todoItemList = [TodoItemList]()
     
+    @IBOutlet var DSS: NSLayoutConstraint!
     @IBOutlet var toDoViewHeight: NSLayoutConstraint!
     let moc = DataController().managedObjectContext
     
@@ -44,6 +45,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     }
     
     func retrieveItemData(model:TodoModel?) {
+        self.currentItemImg.image = UIImage(named: "general")
         if model != nil {
             
             todoTxt.text = model!.title
@@ -53,13 +55,12 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             self.taskDate = CalendarHelper.dateConverter_Closure(model!.taskDate!)
         }
         else{
+            self.currentItemImg.image = UIImage(named: "general")
+             self.taskImage = self.currentItemImg.image
             todoItem.edit = false
         }
     }
     
-    //FIXME Modify here
-    // 1. selectedCell 位置不对
-
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
         switch collectionView {
@@ -67,13 +68,13 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             var size = CGSizeMake(0, 0);
            
             if(DeviceType.IS_IPHONE_5){
-                size = CGSizeMake(38, 48);
+                size = CGSizeMake(40, 50);
             }
             if(DeviceType.IS_IPHONE_6){
-            size = CGSizeMake(45, 55);
+            size = CGSizeMake(50, 60);
             }
             if(DeviceType.IS_IPHONE_6P){
-                size = CGSizeMake(50, 60);
+                size = CGSizeMake(55, 65);
             }
             return size;
             
@@ -82,15 +83,15 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             var size = CGSizeMake(0, 0);
 
             if(DeviceType.IS_IPHONE_5){
-                size = CGSizeMake(28, 23);
+                size = CGSizeMake(33, 28);
             }
 
             if(DeviceType.IS_IPHONE_6){
-                size = CGSizeMake(35, 30);
+                size = CGSizeMake(38, 33);
             }
 
             if(DeviceType.IS_IPHONE_6P){
-            size = CGSizeMake(40, 35);
+            size = CGSizeMake(43, 38);
             }
             return size;
          
@@ -98,12 +99,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             return CGSizeMake(0, 0);
         }
     }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-        let leftRightInset = self.view.frame.size.width / 14.0
-        return UIEdgeInsetsMake(0, leftRightInset, 0, leftRightInset)
-    }
-    
+
     //UICollection delegate method
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         switch collectionView {
@@ -131,16 +127,14 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
             guard indexPath.item > 6 else{return}
             
-            guard indexPath.item >= date!.firstDay - 1 + 7  else{
-                return}
+            guard indexPath.item >= date!.firstDay - 1 + 7  else{return}
             
             self.taskDate = (date!.year, month: date!.month, day: Int(cell.dateText.text!)!)
             
             configSelectedCell()
-            
             cell.contentView.addSubview(selectedCycle)
             cell.contentView.sendSubviewToBack(selectedCycle)
-            
+        
         default:
             break
         }
@@ -180,12 +174,11 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
             if (cell.dateText.text! == String(taskDate!.day)) {
                 
-                configSelectedCell(	)
-                
+                configSelectedCell()
                 cell.contentView.addSubview(selectedCycle)
                 cell.contentView.sendSubviewToBack(selectedCycle)
+                
             }
-            
             return cell
             
         default:
@@ -321,7 +314,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     
         if(DeviceType.IS_IPHONE_5){
         
-            toDoViewHeight.constant = 210
+            toDoViewHeight.constant = 190
             
         }
         if(DeviceType.IS_IPHONE_6){
@@ -331,14 +324,6 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         }
         
     }
-    
-    
-    
-    
-    
-    
-    
-    
     
     private func addToStorage(){
         
@@ -363,14 +348,22 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         selectedCycle.removeFromSuperview()
         selectedCycle = UIImageView()
         selectedCycle.backgroundColor = UIColor.lightGrayColor()
+        
+        if(DeviceType.IS_IPHONE_5){
+            selectedCycle.frame = CGRectMake(2.5,0,28, 28)
+            selectedCycle.layer.cornerRadius = 14
+        }
+        
+        if(DeviceType.IS_IPHONE_6){
+            selectedCycle.frame = CGRectMake(2.5,0,33, 33)
+            selectedCycle.layer.cornerRadius = 16.5
+        }
+        
         if(DeviceType.IS_IPHONE_6P){
-            selectedCycle.frame = CGRectMake(0, 0, 40, 40)
-            selectedCycle.layer.cornerRadius = 20
+            selectedCycle.frame = CGRectMake(2.5,0,38, 38)
+            selectedCycle.layer.cornerRadius = 19
         }
-        else{
-            selectedCycle.frame = CGRectMake(5, 0, 30, 30)
-            selectedCycle.layer.cornerRadius = 15
-        }
+        
         selectedCycle.transform = CGAffineTransformMakeRotation(CGFloat(90.0*M_PI/180.0))
     }
     
