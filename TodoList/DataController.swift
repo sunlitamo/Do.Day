@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 class DataController: NSObject {
+    
     var managedObjectContext:NSManagedObjectContext
     override init() {
         // This resource is the same name as your xcdatamodeld contained in your project.

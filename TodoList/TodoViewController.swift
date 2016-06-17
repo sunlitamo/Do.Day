@@ -10,9 +10,10 @@
  import CoreData
  
  //FIXME Can not load tableview correctly
-
  
- class TodoViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
+ let moc = DataController().managedObjectContext
+ 
+ class TodoViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate {
     
     @IBOutlet var toDoListTableView: UITableView!
     var addButton: UIButton!
@@ -20,7 +21,9 @@
     var doneButton: UIButton!
     
     var todos: [TodoModel] = []
-    let moc = DataController().managedObjectContext
+    
+    var fetchController:NSFetchedResultsController!
+    
     
     
     override func viewDidLoad() {
@@ -28,11 +31,14 @@
         toDoListTableView.delegate = self
         toDoListTableView.dataSource = self
         
-        NSNotificationCenter.defaultCenter().addObserver(self,selector: #selector(reloadData), name: "reload", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self,selector: #selector(reloadData), name: Constants.RELOAD, object: nil)
         
         prepareUI()
-        reloadData()
         
+        
+    }
+    override func viewWillAppear(animated: Bool) {
+        reloadData()
     }
     
     func setEditting() {
@@ -51,17 +57,17 @@
     }
     
     func viewTransfer() {
-        self.performSegueWithIdentifier("addNew", sender: self)
+        self.performSegueWithIdentifier(Constants.SEGUE_NEW_ITEM, sender: self)
     }
     
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return todos.count
+        return self.fetchController.sections[]
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) ->UITableViewCell {
         
-        let cell = toDoListTableView.dequeueReusableCellWithIdentifier("todoCell") as! TodoCell
+        let cell = toDoListTableView.dequeueReusableCellWithIdentifier(Constants.CELL_TODO) as! TodoCell
         
         
         cell.despTxt.text = todos[indexPath.row].title
@@ -135,13 +141,10 @@
     
     func loadCoreData() {
         
-        let fetch = NSFetchRequest(entityName:"TodoModel")
+        let fetchRequest = NSFetchRequest(entityName:Constants.ENTITY_MODEL_TODO)
         
-        do{let data = try moc.executeFetchRequest(fetch) as! [TodoModel]
-        todos = data}
-
-            
-        catch{fatalError()}
+        fetchController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc,sectionNameKeyPath: nil,cacheName:Constants.ENTITY_MODEL_TODO)
+        fetchController.delegate = self
     }
     
     private func prepareUI(){

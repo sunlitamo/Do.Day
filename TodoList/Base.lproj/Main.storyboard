@@ -233,11 +233,8 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Desp" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B2O-yl-DEI">
-                                                    <rect key="frame" x="66" y="8" width="256" height="21"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="256" id="Cpe-SJ-8BT"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="19"/>
+                                                    <rect key="frame" x="78" y="8" width="38" height="21"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -250,12 +247,11 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="oXU-Ga-MUa" firstAttribute="leading" secondItem="gP8-4o-Fuj" secondAttribute="leadingMargin" id="601-pW-sZt"/>
-                                                <constraint firstItem="B2O-yl-DEI" firstAttribute="top" secondItem="gP8-4o-Fuj" secondAttribute="topMargin" id="6qN-Lx-CcC"/>
-                                                <constraint firstItem="B2O-yl-DEI" firstAttribute="leading" secondItem="oXU-Ga-MUa" secondAttribute="trailing" constant="8" symbolic="YES" id="7NL-kj-zC4"/>
                                                 <constraint firstItem="fFj-Iu-GHI" firstAttribute="top" secondItem="B2O-yl-DEI" secondAttribute="bottom" constant="10" id="IOZ-cE-jka"/>
                                                 <constraint firstItem="oXU-Ga-MUa" firstAttribute="centerY" secondItem="gP8-4o-Fuj" secondAttribute="centerY" id="PaF-zp-4BR"/>
                                                 <constraint firstItem="oXU-Ga-MUa" firstAttribute="top" secondItem="gP8-4o-Fuj" secondAttribute="topMargin" constant="2" id="aNu-qP-s88"/>
                                                 <constraint firstItem="oXU-Ga-MUa" firstAttribute="bottom" secondItem="fFj-Iu-GHI" secondAttribute="bottom" id="dxQ-lp-jSI"/>
+                                                <constraint firstItem="B2O-yl-DEI" firstAttribute="leading" secondItem="oXU-Ga-MUa" secondAttribute="trailing" constant="20" id="suk-VH-8IR"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="fFj-Iu-GHI" secondAttribute="trailing" constant="30" id="t1p-lz-SAI"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -279,7 +275,7 @@
                     <navigationItem key="navigationItem" id="oq3-we-MSh"/>
                     <connections>
                         <outlet property="toDoListTableView" destination="wlb-hx-dkI" id="Zki-KQ-xjq"/>
-                        <segue destination="PqH-Sh-OvC" kind="show" identifier="addNew" id="hP1-5s-XXN"/>
+                        <segue destination="PqH-Sh-OvC" kind="show" identifier="addNewItem" id="hP1-5s-XXN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qrV-h8-AFY" userLabel="First Responder" sceneMemberID="firstResponder"/>

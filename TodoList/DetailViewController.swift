@@ -26,9 +26,8 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     var todoItem:(item:TodoModel?,index:Int?,edit:Bool?)
     var todoItemList = [TodoItemList]()
     
-    @IBOutlet var DSS: NSLayoutConstraint!
     @IBOutlet var toDoViewHeight: NSLayoutConstraint!
-    let moc = DataController().managedObjectContext
+    
     
     private var date:(year:Int,month:Int,firstDay:Int,daysCount:Int)?
     
@@ -67,32 +66,20 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         case self.todoItemCollectionView:
             var size = CGSizeMake(0, 0);
            
-            if(DeviceType.IS_IPHONE_5){
-                size = CGSizeMake(40, 50);
-            }
-            if(DeviceType.IS_IPHONE_6){
-            size = CGSizeMake(50, 60);
-            }
-            if(DeviceType.IS_IPHONE_6P){
-                size = CGSizeMake(55, 65);
-            }
+            if(DeviceType.IS_IPHONE_5){size = CGSizeMake(40, 50);}
+            if(DeviceType.IS_IPHONE_6){size = CGSizeMake(50, 60);}
+            if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(55, 65);}
+            
             return size;
             
         case self.calendarCollectionView:
         
             var size = CGSizeMake(0, 0);
 
-            if(DeviceType.IS_IPHONE_5){
-                size = CGSizeMake(33, 28);
-            }
-
-            if(DeviceType.IS_IPHONE_6){
-                size = CGSizeMake(38, 33);
-            }
-
-            if(DeviceType.IS_IPHONE_6P){
-            size = CGSizeMake(43, 38);
-            }
+            if(DeviceType.IS_IPHONE_5){size = CGSizeMake(33, 28);}
+            if(DeviceType.IS_IPHONE_6){size = CGSizeMake(38, 33);}
+            if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(43, 38);}
+            
             return size;
          
         default:
@@ -143,7 +130,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         switch collectionView {
         case self.todoItemCollectionView:
-            let cell = todoItemCollectionView.dequeueReusableCellWithReuseIdentifier("todoCollectionCell",forIndexPath: indexPath) as! TodoCollectionCell
+            let cell = todoItemCollectionView.dequeueReusableCellWithReuseIdentifier(Constants.CELL_TODO_OPTION,forIndexPath: indexPath) as! TodoCollectionCell
             cell.despTxt.text = todoItemList[indexPath.row].title
             if (DeviceType.IS_IPHONE_5) {
                 cell.despTxt.font = cell.despTxt.font.fontWithSize(8)
@@ -153,7 +140,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
             
         case self.calendarCollectionView:
-            let cell = calendarCollectionView.dequeueReusableCellWithReuseIdentifier("calendarCell",forIndexPath: indexPath) as! CalendarCell
+            let cell = calendarCollectionView.dequeueReusableCellWithReuseIdentifier(Constants.CELL_CALENDAR,forIndexPath: indexPath) as! CalendarCell
             
             if  indexPath.item < 7 && indexPath.item >= 0 {
                 cell.dateText.textColor = indexPath.item == 0 ? UIColor.redColor() : UIColor.blackColor()
@@ -227,7 +214,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     }
     func dismiss(){
         self.navigationController?.popViewControllerAnimated(true)
-        NSNotificationCenter.defaultCenter().postNotificationName("reload", object: nil)
+        NSNotificationCenter.defaultCenter().postNotificationName(Constants.RELOAD, object: nil)
     }
     
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -313,21 +300,19 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     private func OptimizeUI(){
     
         if(DeviceType.IS_IPHONE_5){
-        
             toDoViewHeight.constant = 190
-            
         }
-        if(DeviceType.IS_IPHONE_6){
+        else if(DeviceType.IS_IPHONE_6){
             toDoViewHeight.constant = 230
         }
-        if(DeviceType.IS_IPHONE_6P){
+        else if(DeviceType.IS_IPHONE_6P){
+            toDoViewHeight.constant = 257
         }
-        
     }
     
     private func addToStorage(){
         
-        let entity = NSEntityDescription.insertNewObjectForEntityForName("TodoModel", inManagedObjectContext: moc) as! TodoModel
+        let entity = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_MODEL_TODO, inManagedObjectContext: moc) as! TodoModel
         
         entity .setValue(UIImagePNGRepresentation(taskImage!), forKey: "image")
         entity .setValue(todoTxt.text!, forKey: "title")

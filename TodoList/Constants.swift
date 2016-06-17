@@ -1,16 +1,39 @@
 //
-//  DeviceModel.swift
+//  Constants.swift
 //  TodoList
 //
-//  Created by Sunlit.Amo on 12/06/16.
+//  Created by Sunlit.Amo on 16/06/16.
 //  Copyright © 2016年 Sunlit.Amo. All rights reserved.
 //
+
 import UIKit
-enum UIUserInterfaceIdiom : Int
-{
-    case Unspecified
-    case Phone
-    case Pad
+
+struct Constants {
+
+    static let RELOAD = "reload"
+    
+    static let SEGUE_NEW_ITEM = "addNewItem"
+    
+    static let CELL_TODO = "todoCell"
+    static let CELL_CALENDAR = "calendarCell"
+    static let CELL_TODO_OPTION = "todoCollectionCell"
+
+    
+    static let ENTITY_MODEL_TODO = "TodoModel"
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+  
 }
 
 struct ScreenSize
