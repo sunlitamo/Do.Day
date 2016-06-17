@@ -62,23 +62,24 @@
     
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.fetchController.sections[]
+         return self.fetchController.sections![section].numberOfObjects
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) ->UITableViewCell {
         
+        let todoModel = self.fetchController.sections![1].objects![indexPath.row] as! TodoModel
+        
         let cell = toDoListTableView.dequeueReusableCellWithIdentifier(Constants.CELL_TODO) as! TodoCell
         
-        
-        cell.despTxt.text = todos[indexPath.row].title
+        cell.despTxt.text = todoModel.title
         
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
         
         
-        cell.taskTimeTxt.text = CalendarHelper.dateConverter_String(todos[indexPath.row].taskDate!)
+        cell.taskTimeTxt.text = CalendarHelper.dateConverter_String(todoModel.taskDate!)
         
-        cell.todoImg.image = UIImage(data:todos[indexPath.row].image!)
+        cell.todoImg.image = UIImage(data:todoModel.image!)
         
         cell.todoImg.frame = CGRectMake(8, 10, 50, 50)
         cell.despTxt.frame = CGRectMake(56, 10, (cell.frame.width)-30, 20)
@@ -143,6 +144,7 @@
         
         let fetchRequest = NSFetchRequest(entityName:Constants.ENTITY_MODEL_TODO)
         
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date",ascending: true)]
         fetchController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc,sectionNameKeyPath: nil,cacheName:Constants.ENTITY_MODEL_TODO)
         fetchController.delegate = self
     }
@@ -163,7 +165,6 @@
         editButton!.frame = CGRectMake(0, 0, 30, 30)
         editButton!.addTarget(self, action: #selector(setEditting), forControlEvents:.TouchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: editButton)
-        
         
         self.view.insertSubview(addButton, aboveSubview: toDoListTableView)
         
