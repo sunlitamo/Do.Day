@@ -9,35 +9,30 @@
  import UIKit
  import CoreData
  
- //FIXME Can not load tableview correctly
- 
- let moc = DataController().managedObjectContext
- 
- class TodoViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate {
+ class TodoViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
     
     @IBOutlet var toDoListTableView: UITableView!
+    
     var addButton: UIButton!
     var editButton: UIButton!
     var doneButton: UIButton!
     
-    var todos: [TodoModel] = []
+    var todos = [NSManagedObject]()
     
-    var fetchController:NSFetchedResultsController!
-    
-    
+    var managedContext:NSManagedObjectContext!
     
     override func viewDidLoad() {
-        
-        toDoListTableView.delegate = self
-        toDoListTableView.dataSource = self
         
         NSNotificationCenter.defaultCenter().addObserver(self,selector: #selector(reloadData), name: Constants.RELOAD, object: nil)
         
         prepareUI()
-        
-        
     }
+    
     override func viewWillAppear(animated: Bool) {
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        managedContext = appDelegate.managedObjectContext
+
         reloadData()
     }
     
@@ -62,12 +57,12 @@
     
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-         return self.fetchController.sections![section].numberOfObjects
+         return todos.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) ->UITableViewCell {
         
-        let todoModel = self.fetchController.sections![1].objects![indexPath.row] as! TodoModel
+        let todoModel = todos[indexPath.row] as! TodoModel
         
         let cell = toDoListTableView.dequeueReusableCellWithIdentifier(Constants.CELL_TODO) as! TodoCell
         
@@ -90,7 +85,7 @@
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        let item = todos[indexPath.row]
+        let item = todos[indexPath.row] as! TodoModel
         
         let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController")
             as! DetailViewController
@@ -105,9 +100,10 @@
             
             let todoModel = todos.removeAtIndex(indexPath.row)
             
-            moc.deleteObject(todoModel)
+            managedContext.deleteObject(todoModel)
             
-            do{try moc.save()}catch{fatalError()}
+            do{try managedContext.save()}
+            catch{fatalError()}
             
             toDoListTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
         }
@@ -116,12 +112,13 @@
     
     func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
         let todo = todos.removeAtIndex(sourceIndexPath.row)
-        moc.deleteObject(todo)
+        managedContext.deleteObject(todo)
         
         todos.insert(todo, atIndex: destinationIndexPath.row)
-        moc.insertObject(todo)
+        managedContext.insertObject(todo)
         
-        do{try moc.save()}catch{fatalError()}
+        do{try managedContext.save()}
+        catch{fatalError()}
     }
     
     func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -141,12 +138,15 @@
     }
     
     func loadCoreData() {
-        
-        let fetchRequest = NSFetchRequest(entityName:Constants.ENTITY_MODEL_TODO)
-        
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date",ascending: true)]
-        fetchController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc,sectionNameKeyPath: nil,cacheName:Constants.ENTITY_MODEL_TODO)
-        fetchController.delegate = self
+    
+        let fetchRequest = NSFetchRequest(entityName: "TodoModel")
+
+        do {
+            let results = try managedContext.executeFetchRequest(fetchRequest)
+            todos = results as! [NSManagedObject]
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
     }
     
     private func prepareUI(){
@@ -169,7 +169,6 @@
         self.view.insertSubview(addButton, aboveSubview: toDoListTableView)
         
     }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

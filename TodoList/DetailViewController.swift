@@ -20,7 +20,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     @IBOutlet var nextMth: UIButton!
     @IBOutlet var dateLbl: UILabel!
     
-    var selectedCycle = UIImageView()
+    var dateSelected = UIImageView()
     private var taskImage:UIImage? = nil
     private var taskDate:(year:Int,month:Int,day:Int)?
     var todoItem:(item:TodoModel?,index:Int?,edit:Bool?)
@@ -28,15 +28,14 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     
     @IBOutlet var toDoViewHeight: NSLayoutConstraint!
     
+    var managedContext:NSManagedObjectContext!
     
     private var date:(year:Int,month:Int,firstDay:Int,daysCount:Int)?
     
     override func viewDidLoad() {
-        
-        todoItemCollectionView.dataSource = self
-        todoItemCollectionView.delegate = self
-        calendarCollectionView.dataSource = self
-        calendarCollectionView.delegate = self
+
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        managedContext = appDelegate.managedObjectContext
         
         prepareUI()
         retrieveItemData(todoItem.item)
@@ -119,8 +118,8 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             self.taskDate = (date!.year, month: date!.month, day: Int(cell.dateText.text!)!)
             
             configSelectedCell()
-            cell.contentView.addSubview(selectedCycle)
-            cell.contentView.sendSubviewToBack(selectedCycle)
+            cell.contentView.addSubview(dateSelected)
+            cell.contentView.sendSubviewToBack(dateSelected)
         
         default:
             break
@@ -162,8 +161,8 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             if (cell.dateText.text! == String(taskDate!.day)) {
                 
                 configSelectedCell()
-                cell.contentView.addSubview(selectedCycle)
-                cell.contentView.sendSubviewToBack(selectedCycle)
+                cell.contentView.addSubview(dateSelected)
+                cell.contentView.sendSubviewToBack(dateSelected)
                 
             }
             return cell
@@ -206,7 +205,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         case false:
             addToStorage()
         }
-        do{try moc.save()}
+        do{try managedContext.save()}
         catch{fatalError()}
         
         dismiss()
@@ -312,7 +311,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     
     private func addToStorage(){
         
-        let entity = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_MODEL_TODO, inManagedObjectContext: moc) as! TodoModel
+        let entity = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_MODEL_TODO, inManagedObjectContext: managedContext) as! TodoModel
         
         entity .setValue(UIImagePNGRepresentation(taskImage!), forKey: "image")
         entity .setValue(todoTxt.text!, forKey: "title")
@@ -330,26 +329,26 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     }
     
     private func configSelectedCell(){
-        selectedCycle.removeFromSuperview()
-        selectedCycle = UIImageView()
-        selectedCycle.backgroundColor = UIColor.lightGrayColor()
+        dateSelected.removeFromSuperview()
+        dateSelected = UIImageView()
+        dateSelected.backgroundColor = UIColor.lightGrayColor()
         
         if(DeviceType.IS_IPHONE_5){
-            selectedCycle.frame = CGRectMake(2.5,0,28, 28)
-            selectedCycle.layer.cornerRadius = 14
+            dateSelected.frame = CGRectMake(2.5,0,28, 28)
+            dateSelected.layer.cornerRadius = 14
         }
         
         if(DeviceType.IS_IPHONE_6){
-            selectedCycle.frame = CGRectMake(2.5,0,33, 33)
-            selectedCycle.layer.cornerRadius = 16.5
+            dateSelected.frame = CGRectMake(2.5,0,33, 33)
+            dateSelected.layer.cornerRadius = 16.5
         }
         
         if(DeviceType.IS_IPHONE_6P){
-            selectedCycle.frame = CGRectMake(2.5,0,38, 38)
-            selectedCycle.layer.cornerRadius = 19
+            dateSelected.frame = CGRectMake(2.5,0,38, 38)
+            dateSelected.layer.cornerRadius = 19
         }
         
-        selectedCycle.transform = CGAffineTransformMakeRotation(CGFloat(90.0*M_PI/180.0))
+        dateSelected.transform = CGAffineTransformMakeRotation(CGFloat(90.0*M_PI/180.0))
     }
     
 }
