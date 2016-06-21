@@ -36,28 +36,10 @@
         reloadData()
     }
     
-    func setEditting() {
-        switch toDoListTableView.editing {
-        case false:
-            
-            super.setEditing(true, animated: true)
-            toDoListTableView.setEditing(true, animated: true)
-            editButton.selected = true
-        case true:
-            
-            super.setEditing(false, animated: true)
-            toDoListTableView.setEditing(false, animated: true)
-            editButton.selected = false
-        }
-    }
-    
-    @objc private func viewTransfer() {
-        
-        let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
-        detailVC.todoItem = (nil,nil,false)
-        self.navigationController?.pushViewController(detailVC, animated: true)
-    }
-    
+  
+    /**---------------------------------------
+     *--- UITableView Delegate Method ---
+     *---------------------------------------*/
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
          return todos.count
@@ -129,14 +111,40 @@
         return UITableViewCellEditingStyle.Delete
     }
     
-    func reloadData(){
+    /**---------------------
+     *--- Private Method ---
+     *---------------------*/
+
+    
+    @objc private func setEditting() {
+        switch toDoListTableView.editing {
+        case false:
+            
+            super.setEditing(true, animated: true)
+            toDoListTableView.setEditing(true, animated: true)
+            editButton.selected = true
+        case true:
+            
+            super.setEditing(false, animated: true)
+            toDoListTableView.setEditing(false, animated: true)
+            editButton.selected = false
+        }
+    }
+    
+    @objc private func viewTransfer() {
         
+        let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
+        detailVC.todoItem = (nil,nil,false)
+        self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    
+    @objc private func reloadData(){
         loadCoreData()
-        
         toDoListTableView.reloadData()
     }
     
-    func loadCoreData() {
+    private func loadCoreData() {
     
         let fetchRequest = NSFetchRequest(entityName: "TodoModel")
 

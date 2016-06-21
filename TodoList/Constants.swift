@@ -17,23 +17,7 @@ struct Constants {
     static let CELL_TODO = "todoCell"
     static let CELL_CALENDAR = "calendarCell"
     static let CELL_TODO_OPTION = "todoCollectionCell"
-
-    
     static let ENTITY_MODEL_TODO = "TodoModel"
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-  
 }
 
 struct ScreenSize
