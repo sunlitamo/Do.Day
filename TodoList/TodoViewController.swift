@@ -51,8 +51,11 @@
         }
     }
     
-    func viewTransfer() {
-        self.performSegueWithIdentifier(Constants.SEGUE_NEW_ITEM, sender: self)
+    @objc private func viewTransfer() {
+        
+        let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
+        detailVC.todoItem = (nil,nil,false)
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
     
     
@@ -85,12 +88,8 @@
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        let item = todos[indexPath.row] as! TodoModel
-        
-        let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController")
-            as! DetailViewController
-        detailVC.todoItem = (item,indexPath.row,true)
-        
+        let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
+        detailVC.todoItem = (todos[indexPath.row] as? TodoModel,indexPath.row,true)
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
     

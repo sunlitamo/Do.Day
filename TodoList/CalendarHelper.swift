@@ -57,7 +57,26 @@ class CalendarHelper{
         let dt = dateFormatter.stringFromDate(date)
         return dt
     }
+
+    static func updateCalendar(year:Int,month:Int)->(Int,Int) {
+        
+        var date = (year:year,month:month)
+        
+        if (month > 12) {
+            date.month=1;
+            date.year+=1;
+        }
+        
+        if(month<1){
+            date.month=12;
+            date.year-=1;
+        }
+        
+        return date
+    }
 }
+
+
 extension NSDate{
     
     convenience

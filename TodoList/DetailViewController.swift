@@ -33,7 +33,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     private var date:(year:Int,month:Int,firstDay:Int,daysCount:Int)?
     
     override func viewDidLoad() {
-
+        
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         managedContext = appDelegate.managedObjectContext
         
@@ -42,29 +42,14 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         
     }
     
-    func retrieveItemData(model:TodoModel?) {
-        self.currentItemImg.image = UIImage(named: "general")
-        if model != nil {
-            
-            todoTxt.text = model!.title
-            
-            self.currentItemImg.image = UIImage(data: model!.image!)
-            self.taskImage = self.currentItemImg.image
-            self.taskDate = CalendarHelper.dateConverter_Closure(model!.taskDate!)
-        }
-        else{
-            self.currentItemImg.image = UIImage(named: "general")
-             self.taskImage = self.currentItemImg.image
-            todoItem.edit = false
-        }
-    }
+    //UICollection delegate method
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
         switch collectionView {
         case self.todoItemCollectionView:
             var size = CGSizeMake(0, 0);
-           
+            
             if(DeviceType.IS_IPHONE_5){size = CGSizeMake(40, 50);}
             if(DeviceType.IS_IPHONE_6){size = CGSizeMake(50, 60);}
             if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(55, 65);}
@@ -72,21 +57,20 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             return size;
             
         case self.calendarCollectionView:
-        
+            
             var size = CGSizeMake(0, 0);
-
+            
             if(DeviceType.IS_IPHONE_5){size = CGSizeMake(33, 28);}
             if(DeviceType.IS_IPHONE_6){size = CGSizeMake(38, 33);}
             if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(43, 38);}
             
             return size;
-         
+            
         default:
             return CGSizeMake(0, 0);
         }
     }
 
-    //UICollection delegate method
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         switch collectionView {
         case self.todoItemCollectionView:
@@ -120,7 +104,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             configSelectedCell()
             cell.contentView.addSubview(dateSelected)
             cell.contentView.sendSubviewToBack(dateSelected)
-        
+            
         default:
             break
         }
@@ -189,11 +173,10 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         
     }
     
-    
     @IBAction func confirmBtnTapped(sender: UIButton) {
         
-        guard todoTxt.text != nil && self.taskImage != nil && self.taskDate != nil else {
-            showAlertView()
+        guard !(todoTxt.text!.isEmpty) && self.taskImage != nil && self.taskDate != nil else {
+            shakeView()
             return
         }
         
@@ -211,7 +194,27 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         dismiss()
         
     }
-    func dismiss(){
+    
+    private func retrieveItemData(model:TodoModel?) {
+        self.currentItemImg.image = UIImage(named: "general")
+        if model != nil {
+            
+            todoTxt.text = model!.title
+            
+            self.currentItemImg.image = UIImage(data: model!.image!)
+            self.taskImage = self.currentItemImg.image
+            self.taskDate = CalendarHelper.dateConverter_Closure(model!.taskDate!)
+        }
+        else{
+            todoTxt.text = nil
+            self.currentItemImg.image = UIImage(named: "general")
+            self.taskImage = self.currentItemImg.image
+            todoItem.edit = false
+        }
+    }
+
+    
+    @objc private func dismiss(){
         self.navigationController?.popViewControllerAnimated(true)
         NSNotificationCenter.defaultCenter().postNotificationName(Constants.RELOAD, object: nil)
     }
@@ -220,9 +223,12 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         return .None
     }
     
-    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        
+        if(!(todoTxt.text!.isEmpty)){
+          self.highLight(self.todoTxt, enabled: false)
+        }
         return true
     }
     
@@ -230,11 +236,17 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         todoTxt.resignFirstResponder()
     }
     
-    func showAlertView(){
-        let alertController = UIAlertController(title: "Warning", message: "Task incomplete",  preferredStyle: UIAlertControllerStyle.Alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-        alertController.addAction(okAction)
-        self.presentViewController(alertController, animated: true, completion: nil)
+    private func shakeView(){
+
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.07
+        animation.repeatCount = 4
+        animation.autoreverses = true
+        animation.fromValue = NSValue(CGPoint: CGPointMake(todoTxt.center.x - 10, todoTxt.center.y))
+        animation.toValue = NSValue(CGPoint: CGPointMake(todoTxt.center.x + 10, todoTxt.center.y))
+        todoTxt.layer.addAnimation(animation, forKey: "position")
+        
+        self.highLight(self.todoTxt, enabled: true)
     }
     
     @IBAction func prevMth(sender: AnyObject) {
@@ -248,15 +260,8 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     
     private func updateCalendar(year:Int,month:Int) {
         
-        if (month > 12) {
-            date!.month=1;
-            date!.year+=1;
-        }
-        
-        if(month<1){
-            date!.month=12;
-            date!.year-=1;
-        }
+        date!.year = CalendarHelper.updateCalendar(date!.year, month: date!.month).0
+        date!.month = CalendarHelper.updateCalendar(date!.year, month: date!.month).1
         
         date = CalendarHelper.loadCalendar(date!.year, currentMonth: date!.month)
         dateLbl.text = ("\(CalendarHelper.formatDate(date!.month)) \(String(date!.year))")
@@ -274,8 +279,8 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         
         //TODO impl of writting comments in version 1.1
         
-        let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: nil, action: nil)
-        fixedSpace.width = 30.0
+        //let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: nil, action: nil)
+        // fixedSpace.width = 30.0
         
         let confirmBtn = UIButton(type:.Custom)
         confirmBtn.setImage(UIImage(named: "confirm"), forState: .Normal)
@@ -297,7 +302,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     }
     
     private func OptimizeUI(){
-    
+        
         if(DeviceType.IS_IPHONE_5){
             toDoViewHeight.constant = 190
         }
@@ -331,7 +336,10 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     private func configSelectedCell(){
         dateSelected.removeFromSuperview()
         dateSelected = UIImageView()
-        dateSelected.backgroundColor = UIColor.lightGrayColor()
+        dateSelected.backgroundColor = UIColor.clearColor()
+        
+        dateSelected.layer.borderColor = UIColor.orangeColor().CGColor
+        dateSelected.layer.borderWidth = 0.8
         
         if(DeviceType.IS_IPHONE_5){
             dateSelected.frame = CGRectMake(2.5,0,28, 28)
@@ -351,4 +359,18 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         dateSelected.transform = CGAffineTransformMakeRotation(CGFloat(90.0*M_PI/180.0))
     }
     
+    private func highLight(object:AnyObject,enabled:Bool){
+    
+        if (enabled) {
+            object.layer.borderColor = UIColor.redColor().CGColor
+            object.layer.borderWidth = 1
+            object.layer.cornerRadius = 8
+        }
+        else{
+            object.layer.borderColor = UIColor.clearColor().CGColor
+            object.layer.borderWidth = 0
+            object.layer.cornerRadius = 0
+        }
+        
+    }
 }
