@@ -232,11 +232,11 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     private func shakeView(){
         
         let animation = CABasicAnimation(keyPath: "position")
-        animation.duration = 0.07
+        animation.duration = 0.02
         animation.repeatCount = 4
         animation.autoreverses = true
-        animation.fromValue = NSValue(CGPoint: CGPointMake(todoTxt.center.x - 10, todoTxt.center.y))
-        animation.toValue = NSValue(CGPoint: CGPointMake(todoTxt.center.x + 10, todoTxt.center.y))
+        animation.fromValue = NSValue(CGPoint: CGPointMake(todoTxt.center.x - 5, todoTxt.center.y))
+        animation.toValue = NSValue(CGPoint: CGPointMake(todoTxt.center.x + 5, todoTxt.center.y))
         todoTxt.layer.addAnimation(animation, forKey: "position")
         
         self.highLight(self.todoTxt, enabled: true)
