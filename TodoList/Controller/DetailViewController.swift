@@ -68,6 +68,9 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         case self.todoItemCollectionView:
             let cell = todoItemCollectionView.dequeueReusableCellWithReuseIdentifier(Constants.CELL_TODO_OPTION,forIndexPath: indexPath) as! TodoCollectionCell
             cell.despTxt.text = todoItemMenu[indexPath.row].title
+            if (DeviceType.IS_IPHONE_4) {
+                cell.despTxt.font = cell.despTxt.font.fontWithSize(7)
+            }
             if (DeviceType.IS_IPHONE_5) {
                 cell.despTxt.font = cell.despTxt.font.fontWithSize(8)
             }
@@ -77,6 +80,10 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
         case self.calendarCollectionView:
             let cell = calendarCollectionView.dequeueReusableCellWithReuseIdentifier(Constants.CELL_CALENDAR,forIndexPath: indexPath) as! CalendarCell
+            
+            if (DeviceType.IS_IPHONE_4) {
+                cell.dateText.font = cell.dateText.font.fontWithSize(7)
+            }
             
             if  indexPath.item < 7 && indexPath.item >= 0 {
                 cell.dateText.textColor = indexPath.item == 0 ? UIColor.redColor() : UIColor.blackColor()
@@ -155,6 +162,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         case self.todoItemCollectionView:
             var size = CGSizeMake(0, 0);
             
+            if(DeviceType.IS_IPHONE_4){size = CGSizeMake(40, 50);}
             if(DeviceType.IS_IPHONE_5){size = CGSizeMake(40, 50);}
             if(DeviceType.IS_IPHONE_6){size = CGSizeMake(50, 60);}
             if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(55, 65);}
@@ -165,6 +173,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             
             var size = CGSizeMake(0, 0);
             
+            if(DeviceType.IS_IPHONE_4){size = CGSizeMake(33, 18);}
             if(DeviceType.IS_IPHONE_5){size = CGSizeMake(33, 28);}
             if(DeviceType.IS_IPHONE_6){size = CGSizeMake(38, 33);}
             if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(43, 38);}
@@ -308,6 +317,10 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     
     private func OptimizeUI(){
         
+        if(DeviceType.IS_IPHONE_4){
+            toDoViewHeight.constant = 170
+        }
+        
         if(DeviceType.IS_IPHONE_5){
             toDoViewHeight.constant = 190
         }
@@ -346,6 +359,10 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         dateSelected.layer.borderColor = UIColor.orangeColor().CGColor
         dateSelected.layer.borderWidth = 0.8
         
+        if(DeviceType.IS_IPHONE_4){
+            dateSelected.frame = CGRectMake(7.5,0,18, 18)
+            dateSelected.layer.cornerRadius = 9
+        }
         if(DeviceType.IS_IPHONE_5){
             dateSelected.frame = CGRectMake(2.5,0,28, 28)
             dateSelected.layer.cornerRadius = 14

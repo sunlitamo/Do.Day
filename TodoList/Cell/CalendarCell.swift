@@ -18,6 +18,11 @@ class CalendarCell: UICollectionViewCell {
        
         var contentViewFrame = self.contentView.frame
         
+        if(DeviceType.IS_IPHONE_4){
+            contentViewFrame.size.width = 33
+            contentViewFrame.size.height = 18
+        }
+        
         if(DeviceType.IS_IPHONE_5){
             contentViewFrame.size.width = 33
             contentViewFrame.size.height = 28
