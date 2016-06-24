@@ -133,6 +133,8 @@
     
     @objc private func viewTransfer() {
         
+         editButton.selected = false
+        
         let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
         detailVC.todoItem = (nil,nil,false)
         self.navigationController?.pushViewController(detailVC, animated: true)

@@ -71,7 +71,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             if (DeviceType.IS_IPHONE_4) {
                 cell.despTxt.font = cell.despTxt.font.fontWithSize(7)
             }
-            if (DeviceType.IS_IPHONE_5) {
+            else if (DeviceType.IS_IPHONE_5) {
                 cell.despTxt.font = cell.despTxt.font.fontWithSize(8)
             }
             cell.todoImg.image = todoItemMenu[indexPath.row].image
@@ -84,6 +84,10 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             if (DeviceType.IS_IPHONE_4) {
                 cell.dateText.font = cell.dateText.font.fontWithSize(7)
             }
+            else if (DeviceType.IS_IPHONE_5) {
+                cell.dateText.font = cell.dateText.font.fontWithSize(13)
+            }
+            
             
             if  indexPath.item < 7 && indexPath.item >= 0 {
                 cell.dateText.textColor = indexPath.item == 0 ? UIColor.redColor() : UIColor.blackColor()
@@ -98,10 +102,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
                 cell.dateText.text = String(indexPath.item + 1 - (date!.firstDay-1) - 7)
             }
             
-            if (DeviceType.IS_IPHONE_5) {
-                cell.dateText.font = cell.dateText.font.fontWithSize(13)
-            }
-            
+           
             if (cell.dateText.text! == String(taskDate!.day)) {
                 
                 configSelectedCell()
@@ -163,9 +164,10 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             var size = CGSizeMake(0, 0);
             
             if(DeviceType.IS_IPHONE_4){size = CGSizeMake(40, 50);}
-            if(DeviceType.IS_IPHONE_5){size = CGSizeMake(40, 50);}
-            if(DeviceType.IS_IPHONE_6){size = CGSizeMake(50, 60);}
-            if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(55, 65);}
+            else if(DeviceType.IS_IPHONE_5){size = CGSizeMake(40, 50);}
+            else if(DeviceType.IS_IPHONE_6){size = CGSizeMake(50, 60);}
+            else if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(55, 65);}
+            else if(DeviceType.IS_IPAD){size = CGSizeMake(55, 65);}
             
             return size;
             
@@ -174,9 +176,10 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             var size = CGSizeMake(0, 0);
             
             if(DeviceType.IS_IPHONE_4){size = CGSizeMake(33, 18);}
-            if(DeviceType.IS_IPHONE_5){size = CGSizeMake(33, 28);}
-            if(DeviceType.IS_IPHONE_6){size = CGSizeMake(38, 33);}
-            if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(43, 38);}
+            else if(DeviceType.IS_IPHONE_5){size = CGSizeMake(33, 28);}
+            else if(DeviceType.IS_IPHONE_6){size = CGSizeMake(38, 33);}
+            else  if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(43, 38);}
+            else  if(DeviceType.IS_IPAD){size = CGSizeMake(43, 38);}
             
             return size;
             
@@ -321,7 +324,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             toDoViewHeight.constant = 170
         }
         
-        if(DeviceType.IS_IPHONE_5){
+        else if(DeviceType.IS_IPHONE_5){
             toDoViewHeight.constant = 190
         }
         else if(DeviceType.IS_IPHONE_6){
@@ -329,6 +332,9 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         }
         else if(DeviceType.IS_IPHONE_6P){
             toDoViewHeight.constant = 257
+        }
+        else if(DeviceType.IS_IPAD){
+            toDoViewHeight.constant = 270
         }
     }
     
@@ -363,19 +369,24 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             dateSelected.frame = CGRectMake(7.5,0,18, 18)
             dateSelected.layer.cornerRadius = 9
         }
-        if(DeviceType.IS_IPHONE_5){
+        else if(DeviceType.IS_IPHONE_5){
             dateSelected.frame = CGRectMake(2.5,0,28, 28)
             dateSelected.layer.cornerRadius = 14
         }
         
-        if(DeviceType.IS_IPHONE_6){
+        else if(DeviceType.IS_IPHONE_6){
             dateSelected.frame = CGRectMake(2.5,0,33, 33)
             dateSelected.layer.cornerRadius = 16.5
         }
         
-        if(DeviceType.IS_IPHONE_6P){
+        else if(DeviceType.IS_IPHONE_6P){
             dateSelected.frame = CGRectMake(2.5,0,38, 38)
             dateSelected.layer.cornerRadius = 19
+        }
+        
+        else if(DeviceType.IS_IPAD){
+            dateSelected.frame = CGRectMake(2.5,0,44, 44)
+            dateSelected.layer.cornerRadius = 22
         }
         
         dateSelected.transform = CGAffineTransformMakeRotation(CGFloat(90.0*M_PI/180.0))

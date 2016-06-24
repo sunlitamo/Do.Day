@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E99BA7D81CC62BB900860CB0"
-               BuildableName = "TodoList.app"
-               BlueprintName = "TodoList"
-               ReferencedContainer = "container:TodoList.xcodeproj">
+               BuildableName = "Do.Day.app"
+               BlueprintName = "Do.Day"
+               ReferencedContainer = "container:Do.Day.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,16 +33,16 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E99BA7D81CC62BB900860CB0"
-            BuildableName = "TodoList.app"
-            BlueprintName = "TodoList"
-            ReferencedContainer = "container:TodoList.xcodeproj">
+            BuildableName = "Do.Day.app"
+            BlueprintName = "Do.Day"
+            ReferencedContainer = "container:Do.Day.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E99BA7D81CC62BB900860CB0"
-            BuildableName = "TodoList.app"
-            BlueprintName = "TodoList"
-            ReferencedContainer = "container:TodoList.xcodeproj">
+            BuildableName = "Do.Day.app"
+            BlueprintName = "Do.Day"
+            ReferencedContainer = "container:Do.Day.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -75,9 +75,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E99BA7D81CC62BB900860CB0"
-            BuildableName = "TodoList.app"
-            BlueprintName = "TodoList"
-            ReferencedContainer = "container:TodoList.xcodeproj">
+            BuildableName = "Do.Day.app"
+            BlueprintName = "Do.Day"
+            ReferencedContainer = "container:Do.Day.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
