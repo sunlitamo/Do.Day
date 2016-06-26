@@ -29,13 +29,11 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     @IBOutlet var toDoViewHeight: NSLayoutConstraint!
     
     var managedContext:NSManagedObjectContext!
+    var fetchedResultsController:NSFetchedResultsController!
     
     private var date:(year:Int,month:Int,firstDay:Int,daysCount:Int)?
     
     override func viewDidLoad() {
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        managedContext = appDelegate.managedObjectContext
         
         prepareUI()
         retrieveItemData(todoItem.item)
@@ -254,27 +252,6 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         self.highLight(self.todoTxt, enabled: true)
     }
     
-    @objc private func confirmBtnTapped(sender: UIButton) {
-        
-        guard !(todoTxt.text!.isEmpty) && self.taskImage != nil && self.taskDate != nil else {
-            shakeView()
-            return
-        }
-        
-        if todoItem.edit! { updateStorage() }
-        else{ addToStorage() }
-        
-        do{ try managedContext.save() }
-        catch{ fatalError() }
-        
-        dismiss()
-    }
-    
-    @objc private func dismiss(){
-        self.navigationController?.popViewControllerAnimated(true)
-        NSNotificationCenter.defaultCenter().postNotificationName(Constants.RELOAD, object: nil)
-    }
-    
     private func updateCalendar(year:Int,month:Int) {
         
         date!.year = CalendarHelper.updateCalendar(date!.year, month: date!.month).0
@@ -338,13 +315,43 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         }
     }
     
+    @objc private func confirmBtnTapped(sender: UIButton) {
+        
+        guard !(todoTxt.text!.isEmpty) && self.taskImage != nil && self.taskDate != nil else {
+            shakeView()
+            return
+        }
+        
+        if todoItem.edit! { updateStorage() }
+        else{ addToStorage() }
+        
+        do{ try managedContext.save() }
+        catch{ fatalError() }
+        
+        dismiss()
+    }
+    
     private func addToStorage(){
         
         let entity = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_MODEL_TODO, inManagedObjectContext: managedContext) as! TodoModel
         
-        entity .setValue(UIImagePNGRepresentation(taskImage!), forKey: "image")
-        entity .setValue(todoTxt.text!, forKey: "title")
-        entity .setValue(CalendarHelper.dateConverter_NSdate((self.taskDate!.year, month: self.taskDate!.month, day: self.taskDate!.day)), forKey: "taskDate")
+        entity.setValue(UIImagePNGRepresentation(taskImage!), forKey: "image")
+        entity.setValue(todoTxt.text!, forKey: "title")
+        let taskDate = CalendarHelper.dateConverter_NSdate((self.taskDate!.year, month: self.taskDate!.month, day: self.taskDate!.day))
+        entity.setValue(taskDate, forKey: "taskDate")
+        entity.setValue(NSNumber(bool: false), forKey: "done")
+        
+        var order:NSNumber = 1
+        
+        for section in fetchedResultsController.sections! {
+            if CalendarHelper.dateConverter_NSDate(section.name) == taskDate {
+                order = section.numberOfObjects + 1
+                break
+            }
+        }
+        NSLog("title:\(todoTxt.text!),order:\(order)")
+        entity.setValue(order, forKey: "order")
+        
     }
     
     
@@ -355,6 +362,11 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             todoItem.item!.setValue(todoTxt.text!, forKey: "title")
             todoItem.item!.setValue(CalendarHelper.dateConverter_NSdate((self.taskDate!.year, month: self.taskDate!.month, day: self.taskDate!.day)), forKey: "taskDate")
         }
+    }
+    
+    @objc private func dismiss(){
+        self.navigationController?.popViewControllerAnimated(true)
+        NSNotificationCenter.defaultCenter().postNotificationName(Constants.RELOAD, object: nil)
     }
     
     private func configSelectedCell(){

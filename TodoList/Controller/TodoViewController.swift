@@ -9,7 +9,7 @@
  import UIKit
  import CoreData
  
- class TodoViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
+ class TodoViewController: UIViewController {
     
     @IBOutlet var toDoListTableView: UITableView!
     
@@ -17,7 +17,8 @@
     var editButton: UIButton!
     var doneButton: UIButton!
     
-    var todos = [NSManagedObject]()
+    var coreDataStack: CoreDataStack!
+    var fetchedResultsController:NSFetchedResultsController!
     
     var managedContext:NSManagedObjectContext!
     
@@ -30,91 +31,16 @@
     
     override func viewWillAppear(animated: Bool) {
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        managedContext = appDelegate.managedObjectContext
-
+        managedContext = coreDataStack.context
+        
         reloadData()
     }
     
-  
-    /**---------------------------------------
-     *--- UITableView Delegate Method ---
-     *---------------------------------------*/
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-         return todos.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) ->UITableViewCell {
-        
-        let todoModel = todos[indexPath.row] as! TodoModel
-        
-        let cell = toDoListTableView.dequeueReusableCellWithIdentifier(Constants.CELL_TODO) as! TodoCell
-        
-        cell.despTxt.text = todoModel.title
-        
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
-        
-        
-        cell.taskTimeTxt.text = CalendarHelper.dateConverter_String(todoModel.taskDate!)
-        
-        cell.todoImg.image = UIImage(data:todoModel.image!)
-        
-        cell.todoImg.frame = CGRectMake(8, 10, 50, 50)
-        cell.despTxt.frame = CGRectMake(56, 10, (cell.frame.width)-30, 20)
-        cell.taskTimeTxt.frame = CGRectMake((cell.frame.width)-30, 40, (cell.frame.width)-30, 20)
-        
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
-        detailVC.todoItem = (todos[indexPath.row] as? TodoModel,indexPath.row,true)
-        self.navigationController?.pushViewController(detailVC, animated: true)
-    }
-    
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath){
-        
-        if editingStyle == UITableViewCellEditingStyle.Delete {
-            
-            let todoModel = todos.removeAtIndex(indexPath.row)
-            
-            managedContext.deleteObject(todoModel)
-            
-            do{try managedContext.save()}
-            catch{fatalError()}
-            
-            toDoListTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
-        }
-        
-    }
-    
-    func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
-        let todo = todos.removeAtIndex(sourceIndexPath.row)
-        managedContext.deleteObject(todo)
-        
-        todos.insert(todo, atIndex: destinationIndexPath.row)
-        managedContext.insertObject(todo)
-        
-        do{try managedContext.save()}
-        catch{fatalError()}
-    }
-    
-    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
-    
-    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-        return UITableViewCellEditingStyle.Delete
-    }
     
     /**---------------------
      *--- Private Method ---
      *---------------------*/
-
+    
     
     @objc private func setEditting() {
         switch toDoListTableView.editing {
@@ -133,10 +59,12 @@
     
     @objc private func viewTransfer() {
         
-         editButton.selected = false
-        
+        editButton.selected = false
         let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
         detailVC.todoItem = (nil,nil,false)
+        detailVC.managedContext = self.managedContext
+        detailVC.fetchedResultsController = self.fetchedResultsController
+        
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
     
@@ -147,15 +75,21 @@
     }
     
     private func loadCoreData() {
-    
+        
         let fetchRequest = NSFetchRequest(entityName: "TodoModel")
-
-        do {
-            let results = try managedContext.executeFetchRequest(fetchRequest)
-            todos = results as! [NSManagedObject]
-        } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
-        }
+        let dateSort =
+            NSSortDescriptor(key: "taskDate", ascending: true)
+        let orderSort =
+            NSSortDescriptor(key: "order", ascending: true)
+        fetchRequest.sortDescriptors = [dateSort,orderSort]
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                              managedObjectContext: coreDataStack.context,
+                                                              sectionNameKeyPath: "taskDate",cacheName: nil)
+        
+        fetchedResultsController.delegate = self
+        
+        do{ try fetchedResultsController.performFetch() }
+        catch{ fatalError() }
     }
     
     private func prepareUI(){
@@ -182,4 +116,177 @@
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+ }
+ 
+ /**---------------------------------------
+  *--- UITableView Delegate Method ---
+  *---------------------------------------*/
+ 
+ extension TodoViewController:UITableViewDataSource{
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        
+        return fetchedResultsController.sections!.count
+    }
+    
+    func tableView(tableView: UITableView,
+                   titleForHeaderInSection section: Int) -> String? {
+        let sectionInfo =
+            fetchedResultsController.sections![section]
+        return  CalendarHelper.dateConverter_GMT(sectionInfo.name)
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let sectionInfo =
+            fetchedResultsController.sections![section]
+        return sectionInfo.numberOfObjects
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) ->UITableViewCell {
+        
+        let todoModel = fetchedResultsController.objectAtIndexPath(indexPath) as! TodoModel
+        
+        let cell = toDoListTableView.dequeueReusableCellWithIdentifier(Constants.CELL_TODO) as! TodoCell
+        
+        cell.despTxt.text = todoModel.title
+        cell.taskTimeTxt.text = CalendarHelper.dateConverter_String(todoModel.taskDate!)
+        cell.todoImg.image = UIImage(data:todoModel.image!)
+        cell.todoImg.frame = CGRectMake(8, 10, 50, 50)
+        cell.despTxt.frame = CGRectMake(56, 10, (cell.frame.width)-30, 20)
+        cell.taskTimeTxt.frame = CGRectMake((cell.frame.width)-30, 40, (cell.frame.width)-30, 20)
+        
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath){
+        
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            
+            let todoModel = fetchedResultsController.objectAtIndexPath(indexPath) as! TodoModel
+            
+            toDoListTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
+            
+            managedContext.deleteObject(todoModel)
+            
+            do{try managedContext.save()}
+            catch{fatalError()}
+        }
+    }
+    
+    
+    //FIXME pending..
+    func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        
+        var fetchResult = self.fetchedResultsController.fetchedObjects
+        let srcModel = fetchResult![sourceIndexPath.row] as! TodoModel
+        let dstModel = fetchResult![destinationIndexPath.row] as? TodoModel
+        
+        NSLog("check 1 \(fetchResult!.count)")
+        
+        fetchResult!.removeAtIndex(sourceIndexPath.row)
+        
+        //Not the same section
+        if (sourceIndexPath.section != destinationIndexPath.section) {
+            
+            //新的item取代旧的item的 位置 newItem.order = oldItem.order
+            //旧的item order - 1，及任何order 小于 oldItem.order 的 items 都减 1
+            //调整item task date
+            
+        }
+            //Same section
+        else{
+            //调整 同一 section 中items 的顺序
+            NSLog("check 3")
+        
+            let sectionInfo = fetchedResultsController.sections![destinationIndexPath.section]
+            let modelCount = sectionInfo.numberOfObjects
+            
+            if dstModel != nil {
+                NSLog("check 4 dst:\(dstModel!.order!.intValue),src:\(srcModel.order!.intValue)")
+                
+                if dstModel!.order!.intValue > srcModel.order!.intValue {
+                    NSLog("check 5")
+                    for i in 1...modelCount {
+                        guard i <= Int(dstModel!.order!.intValue) else{ break }
+                        
+                        if i < Int(dstModel!.order!.intValue) && i > Int(srcModel.order!.intValue) {
+                            
+                            let model = fetchResult![i - 1] as! TodoModel
+                            NSLog("model name: \(model.title!)")
+                            NSLog("[\(i)] orin:\(model.order)")
+                            model.order = Int(model.order!.intValue) + 1
+                            NSLog("[\(i)] new:\(model.order)")
+                        }
+                        
+                    }
+                }
+                if srcModel.order!.intValue > dstModel!.order!.intValue {
+                    NSLog("check 6")
+                    for i in 0...modelCount {
+                        
+                        guard i < Int(srcModel.order!.intValue) else{ break }
+                        
+                        if i < Int(srcModel.order!.intValue) && i >= Int(dstModel!.order!.intValue) {
+                            
+                            let model = fetchResult![destinationIndexPath.row] as! TodoModel
+                            NSLog("[\(i)] orin:\(model.order)")
+                            model.order = Int(model.order!.intValue) - 1
+                            NSLog("[\(i)] new:\(model.order)")
+                        }
+                    }
+                }
+            }
+        }
+        
+        //存储调整顺序后的item
+        
+        if dstModel != nil {
+            srcModel.order = dstModel!.order
+        } else{
+            srcModel.order = 1
+        }
+    
+        fetchResult!.insert(srcModel, atIndex: destinationIndexPath.row)
+        //保存context
+        do{try managedContext.save()}
+        catch{fatalError()}
+        
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            tableView.reloadRowsAtIndexPaths(tableView.indexPathsForVisibleRows!, withRowAnimation: UITableViewRowAnimation.Fade)
+        })
+    }
+    
+    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle.Delete
+    }
+ }
+ 
+ extension TodoViewController: NSFetchedResultsControllerDelegate {
+    
+    func controllerDidChangeContent(controller:
+        NSFetchedResultsController) {
+        toDoListTableView.reloadData()
+    }
+ }
+ 
+ extension TodoViewController:UITableViewDelegate{
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let todoModel =
+            fetchedResultsController.objectAtIndexPath(indexPath)
+                as! TodoModel
+        
+        let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
+        detailVC.todoItem = (todoModel,indexPath.row,true)
+        detailVC.managedContext = self.managedContext
+        detailVC.fetchedResultsController = self.fetchedResultsController
+        self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    
  }

@@ -1,8 +1,8 @@
 //
 //  TodoModel.swift
-//  TodoList
+//  Do.Day
 //
-//  Created by Sunlit.Amo on 05/06/16.
+//  Created by Sunlit.Amo on 24/06/16.
 //  Copyright © 2016年 Sunlit.Amo. All rights reserved.
 //
 

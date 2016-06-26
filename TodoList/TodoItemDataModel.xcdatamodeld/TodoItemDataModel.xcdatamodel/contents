@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15E65" minimumToolsVersion="Xcode 7.0">
-    <entity name="TaskDate" representedClassName=".TaskDate" syncable="YES">
-        <attribute name="taskDate" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="todoModel" optional="YES" maxCount="1" deletionRule="Nullify" ordered="YES" destinationEntity="TodoModel" inverseName="date" inverseEntity="TodoModel" syncable="YES"/>
-    </entity>
     <entity name="TodoModel" representedClassName=".TodoModel" syncable="YES">
+        <attribute name="done" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="taskDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="date" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TaskDate" inverseName="todoModel" inverseEntity="TaskDate" syncable="YES"/>
     </entity>
     <elements>
-        <element name="TodoModel" positionX="214" positionY="12" width="128" height="103"/>
-        <element name="TaskDate" positionX="-63" positionY="0" width="128" height="73"/>
+        <element name="TodoModel" positionX="214" positionY="12" width="128" height="120"/>
     </elements>
 </model>

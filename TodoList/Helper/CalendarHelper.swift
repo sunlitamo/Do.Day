@@ -74,6 +74,25 @@ class CalendarHelper{
         
         return date
     }
+    
+    static func dateConverter_GMT(dateStr:String)->String{
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        
+        let date = dateFormatter.dateFromString(dateStr)
+        
+        let dateFormatter1 = NSDateFormatter()
+        dateFormatter1.dateFormat = "yyyy-MM-dd"
+        let dt = dateFormatter1.stringFromDate(date!)
+        return dt
+    }
+    static func dateConverter_NSDate(dateStr:String)->NSDate{
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        
+        return dateFormatter.dateFromString(dateStr)!
+    }
+
 }
 
 

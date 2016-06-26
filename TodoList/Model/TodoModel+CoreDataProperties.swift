@@ -1,8 +1,8 @@
 //
-//  TaskDate+CoreDataProperties.swift
-//  TodoList
+//  TodoModel+CoreDataProperties.swift
+//  Do.Day
 //
-//  Created by Sunlit.Amo on 05/06/16.
+//  Created by Sunlit.Amo on 24/06/16.
 //  Copyright © 2016年 Sunlit.Amo. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -12,9 +12,13 @@
 import Foundation
 import CoreData
 
-extension TaskDate {
+extension TodoModel {
 
+    @NSManaged var image: NSData?
     @NSManaged var taskDate: NSDate?
-    @NSManaged var todoModel: TodoModel?
+    @NSManaged var title: String?
+    @NSManaged var done: NSNumber
+    @NSManaged var order: NSNumber?
+
 
 }

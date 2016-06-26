@@ -16,15 +16,15 @@
 		ACA62F651D1A51FF00A606F1 /* TodoListHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA62F631D1A51FF00A606F1 /* TodoListHelper.swift */; };
 		ACA62F671D1A520C00A606F1 /* TodoItemMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA62F661D1A520C00A606F1 /* TodoItemMenu.swift */; };
 		ACA62F691D1A521D00A606F1 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA62F681D1A521D00A606F1 /* Constants.swift */; };
-		E907981D1D03EB250050D455 /* TodoModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90798191D03EB250050D455 /* TodoModel+CoreDataProperties.swift */; };
-		E907981E1D03EB250050D455 /* TodoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907981A1D03EB250050D455 /* TodoModel.swift */; };
-		E907981F1D03EB250050D455 /* TaskDate+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907981B1D03EB250050D455 /* TaskDate+CoreDataProperties.swift */; };
-		E90798201D03EB250050D455 /* TaskDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907981C1D03EB250050D455 /* TaskDate.swift */; };
+		E95F41A21D1D891B005BAAE6 /* TodoModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95F41A01D1D891B005BAAE6 /* TodoModel+CoreDataProperties.swift */; };
+		E95F41A31D1D891B005BAAE6 /* TodoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95F41A11D1D891B005BAAE6 /* TodoModel.swift */; };
 		E96424CB1CF5F37700073BEA /* TodoItemDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E96424C91CF5F37700073BEA /* TodoItemDataModel.xcdatamodeld */; };
 		E99BA7DD1CC62BB900860CB0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99BA7DC1CC62BB900860CB0 /* AppDelegate.swift */; };
 		E99BA7E21CC62BB900860CB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E99BA7E01CC62BB900860CB0 /* Main.storyboard */; };
 		E99BA7E41CC62BB900860CB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E99BA7E31CC62BB900860CB0 /* Assets.xcassets */; };
 		E99BA7E71CC62BB900860CB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E99BA7E51CC62BB900860CB0 /* LaunchScreen.storyboard */; };
+		E9BB8D411D1F7DD9008A8995 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BB8D401D1F7DD9008A8995 /* CoreDataStack.swift */; };
+		E9BB8D451D1FB4F6008A8995 /* LanguageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BB8D441D1FB4F6008A8995 /* LanguageHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,10 +37,8 @@
 		ACA62F631D1A51FF00A606F1 /* TodoListHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TodoListHelper.swift; path = Helper/TodoListHelper.swift; sourceTree = "<group>"; };
 		ACA62F661D1A520C00A606F1 /* TodoItemMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TodoItemMenu.swift; path = Model/TodoItemMenu.swift; sourceTree = "<group>"; };
 		ACA62F681D1A521D00A606F1 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = Utils/Constants.swift; sourceTree = "<group>"; };
-		E90798191D03EB250050D455 /* TodoModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TodoModel+CoreDataProperties.swift"; path = "../TodoModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		E907981A1D03EB250050D455 /* TodoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TodoModel.swift; path = ../TodoModel.swift; sourceTree = "<group>"; };
-		E907981B1D03EB250050D455 /* TaskDate+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TaskDate+CoreDataProperties.swift"; path = "../TaskDate+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		E907981C1D03EB250050D455 /* TaskDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TaskDate.swift; path = ../TaskDate.swift; sourceTree = "<group>"; };
+		E95F41A01D1D891B005BAAE6 /* TodoModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TodoModel+CoreDataProperties.swift"; path = "Model/TodoModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		E95F41A11D1D891B005BAAE6 /* TodoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TodoModel.swift; path = Model/TodoModel.swift; sourceTree = "<group>"; };
 		E96424CA1CF5F37700073BEA /* TodoItemDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TodoItemDataModel.xcdatamodel; sourceTree = "<group>"; };
 		E99BA7D91CC62BB900860CB0 /* Do.Day.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Do.Day.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E99BA7DC1CC62BB900860CB0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -48,6 +46,8 @@
 		E99BA7E31CC62BB900860CB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E99BA7E61CC62BB900860CB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E99BA7E81CC62BB900860CB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E9BB8D401D1F7DD9008A8995 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataStack.swift; path = Model/CoreDataStack.swift; sourceTree = "<group>"; };
+		E9BB8D441D1FB4F6008A8995 /* LanguageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LanguageHelper.swift; path = Helper/LanguageHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,11 +72,10 @@
 		E998B6BB1CD5C3F80001CCBF /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E9BB8D401D1F7DD9008A8995 /* CoreDataStack.swift */,
+				E95F41A01D1D891B005BAAE6 /* TodoModel+CoreDataProperties.swift */,
+				E95F41A11D1D891B005BAAE6 /* TodoModel.swift */,
 				ACA62F661D1A520C00A606F1 /* TodoItemMenu.swift */,
-				E90798191D03EB250050D455 /* TodoModel+CoreDataProperties.swift */,
-				E907981A1D03EB250050D455 /* TodoModel.swift */,
-				E907981B1D03EB250050D455 /* TaskDate+CoreDataProperties.swift */,
-				E907981C1D03EB250050D455 /* TaskDate.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -106,6 +105,7 @@
 		E998B6C01CD5D2100001CCBF /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				E9BB8D441D1FB4F6008A8995 /* LanguageHelper.swift */,
 				ACA62F621D1A51FF00A606F1 /* CalendarHelper.swift */,
 				ACA62F631D1A51FF00A606F1 /* TodoListHelper.swift */,
 			);
@@ -175,6 +175,7 @@
 				TargetAttributes = {
 					E99BA7D81CC62BB900860CB0 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = JSLYM942GL;
 					};
 				};
 			};
@@ -214,17 +215,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E907981F1D03EB250050D455 /* TaskDate+CoreDataProperties.swift in Sources */,
 				E99BA7DD1CC62BB900860CB0 /* AppDelegate.swift in Sources */,
-				E907981E1D03EB250050D455 /* TodoModel.swift in Sources */,
+				E95F41A31D1D891B005BAAE6 /* TodoModel.swift in Sources */,
 				ACA62F5C1D1A51DC00A606F1 /* TodoCell.swift in Sources */,
+				E9BB8D451D1FB4F6008A8995 /* LanguageHelper.swift in Sources */,
 				ACA62F671D1A520C00A606F1 /* TodoItemMenu.swift in Sources */,
-				E90798201D03EB250050D455 /* TaskDate.swift in Sources */,
 				ACA62F691D1A521D00A606F1 /* Constants.swift in Sources */,
+				E9BB8D411D1F7DD9008A8995 /* CoreDataStack.swift in Sources */,
 				E96424CB1CF5F37700073BEA /* TodoItemDataModel.xcdatamodeld in Sources */,
 				ACA62F611D1A51ED00A606F1 /* TodoViewController.swift in Sources */,
 				ACA62F5B1D1A51DC00A606F1 /* CalendarCell.swift in Sources */,
-				E907981D1D03EB250050D455 /* TodoModel+CoreDataProperties.swift in Sources */,
+				E95F41A21D1D891B005BAAE6 /* TodoModel+CoreDataProperties.swift in Sources */,
 				ACA62F5D1D1A51DC00A606F1 /* TodoCollectionCell.swift in Sources */,
 				ACA62F601D1A51ED00A606F1 /* DetailViewController.swift in Sources */,
 				ACA62F651D1A51FF00A606F1 /* TodoListHelper.swift in Sources */,
@@ -341,10 +342,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = TodoList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sunlitamo;
 				PRODUCT_NAME = Do.Day;
+				PROVISIONING_PROFILE = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -353,10 +359,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = TodoList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sunlitamo;
 				PRODUCT_NAME = Do.Day;
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

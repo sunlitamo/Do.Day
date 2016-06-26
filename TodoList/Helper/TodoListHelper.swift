@@ -25,14 +25,24 @@ class TodoListHelper {
         
         var WeekDays = [String]()
         
-        WeekDays.append("S")
-        WeekDays.append("M")
-        WeekDays.append("T")
-        WeekDays.append("W")
-        WeekDays.append("T")
-        WeekDays.append("F")
-        WeekDays.append("S")
-        
+        if LanguageHelper.isCN() {
+            WeekDays.append("日")
+            WeekDays.append("一")
+            WeekDays.append("二")
+            WeekDays.append("三")
+            WeekDays.append("四")
+            WeekDays.append("五")
+            WeekDays.append("六")
+        }
+        else{
+            WeekDays.append("S")
+            WeekDays.append("M")
+            WeekDays.append("T")
+            WeekDays.append("W")
+            WeekDays.append("T")
+            WeekDays.append("F")
+            WeekDays.append("S")
+        }
         return WeekDays
     }
 }
