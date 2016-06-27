@@ -178,12 +178,13 @@
     func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
         
         var fetchResult = self.fetchedResultsController.fetchedObjects
-        let srcModel = fetchResult![sourceIndexPath.row] as! TodoModel
-        let dstModel = fetchResult![destinationIndexPath.row] as? TodoModel
         
         NSLog("check 1 \(fetchResult!.count)")
         
-        fetchResult!.removeAtIndex(sourceIndexPath.row)
+        let srcModel = fetchResult![sourceIndexPath.row] as! TodoModel
+        let dstModel = fetchResult![destinationIndexPath.row] as? TodoModel
+        
+        let newSrcOrder = dstModel!.order!
         
         //Not the same section
         if (sourceIndexPath.section != destinationIndexPath.section) {
@@ -196,43 +197,48 @@
             //Same section
         else{
             //调整 同一 section 中items 的顺序
-            NSLog("check 3")
-        
+            
             let sectionInfo = fetchedResultsController.sections![destinationIndexPath.section]
             let modelCount = sectionInfo.numberOfObjects
             
-            if dstModel != nil {
-                NSLog("check 4 dst:\(dstModel!.order!.intValue),src:\(srcModel.order!.intValue)")
+            // src.order < dst.order : item.order > src.order && item.order <= dst.order
+            if srcModel.order!.intValue < dstModel!.order!.intValue {
                 
-                if dstModel!.order!.intValue > srcModel.order!.intValue {
-                    NSLog("check 5")
-                    for i in 1...modelCount {
-                        guard i <= Int(dstModel!.order!.intValue) else{ break }
+                for i in 1...modelCount {
+                    
+                    // item.order > dst.order -> break
+                    NSLog("check 3:第\(i)个 vs dst:\(Int(dstModel!.order!.intValue))")
+                    
+                    guard i <= Int(dstModel!.order!.intValue) else{ break }
+                    
+                    if (i <= Int(dstModel!.order!.intValue)) && (i > Int(srcModel.order!.intValue)) {
                         
-                        if i < Int(dstModel!.order!.intValue) && i > Int(srcModel.order!.intValue) {
-                            
-                            let model = fetchResult![i - 1] as! TodoModel
-                            NSLog("model name: \(model.title!)")
-                            NSLog("[\(i)] orin:\(model.order)")
-                            model.order = Int(model.order!.intValue) + 1
-                            NSLog("[\(i)] new:\(model.order)")
-                        }
-                        
+                        let model = fetchResult![i - 1] as! TodoModel
+                        NSLog("[\(i)] model name: \(model.title!)")
+                        NSLog("[\(i)] orin:\(model.order)")
+                        model.order = Int(model.order!.intValue) - 1
+                        NSLog("[\(i)] new:\(model.order)")
                     }
+                    
                 }
-                if srcModel.order!.intValue > dstModel!.order!.intValue {
-                    NSLog("check 6")
-                    for i in 0...modelCount {
+            }
+            // src.order > dst.order : item.order < src.order && item.order >= dst.order
+            if srcModel.order!.intValue > dstModel!.order!.intValue {
+                
+                for i in 1...modelCount {
+                    
+                    // item.order > src.order -> break
+                    NSLog("check 3:第\(i)个 vs dst:\(Int(dstModel!.order!.intValue))")
+                    
+                    guard i < Int(srcModel.order!.intValue) else{ break }
+                    
+                    if i < Int(srcModel.order!.intValue) && i >= Int(dstModel!.order!.intValue) {
                         
-                        guard i < Int(srcModel.order!.intValue) else{ break }
-                        
-                        if i < Int(srcModel.order!.intValue) && i >= Int(dstModel!.order!.intValue) {
-                            
-                            let model = fetchResult![destinationIndexPath.row] as! TodoModel
-                            NSLog("[\(i)] orin:\(model.order)")
-                            model.order = Int(model.order!.intValue) - 1
-                            NSLog("[\(i)] new:\(model.order)")
-                        }
+                        let model = fetchResult![i - 1] as! TodoModel
+                        NSLog("[\(i)] model name: \(model.title!)")
+                        NSLog("[\(i)] orin:\(model.order)")
+                        model.order = Int(model.order!.intValue) + 1
+                        NSLog("[\(i)] new:\(model.order)")
                     }
                 }
             }
@@ -240,12 +246,11 @@
         
         //存储调整顺序后的item
         
-        if dstModel != nil {
-            srcModel.order = dstModel!.order
-        } else{
-            srcModel.order = 1
-        }
-    
+        NSLog("[src orin:\(srcModel.order)")
+        srcModel.order = newSrcOrder
+        NSLog("[src new:\(srcModel.order)")
+        
+        fetchResult!.removeAtIndex(sourceIndexPath.row)
         fetchResult!.insert(srcModel, atIndex: destinationIndexPath.row)
         //保存context
         do{try managedContext.save()}
