@@ -186,20 +186,33 @@
         
         let newSrcOrder = dstModel!.order!
         
+        let sectionInfo = fetchedResultsController.sections![destinationIndexPath.section]
+        let modelCount = sectionInfo.numberOfObjects
+        
         //Not the same section
         if (sourceIndexPath.section != destinationIndexPath.section) {
-            
-            //新的item取代旧的item的 位置 newItem.order = oldItem.order
-            //旧的item order - 1，及任何order 小于 oldItem.order 的 items 都减 1
-            //调整item task date
-            
+            NSLog("check diff section")
+            if srcModel.order!.intValue < dstModel!.order!.intValue {
+                
+                for i in 1...modelCount {
+                    
+                    // item.order > dst.order -> break
+                    NSLog("check 3:第\(i)个 vs dst:\(Int(dstModel!.order!.intValue))")
+                    
+                    if (i >= Int(dstModel!.order!.intValue)) {
+                        
+                        let model = fetchResult![i - 1] as! TodoModel
+                        NSLog("[\(i)] model name: \(model.title!)")
+                        NSLog("[\(i)] orin:\(model.order)")
+                        model.order = Int(model.order!.intValue) + 1
+                        NSLog("[\(i)] new:\(model.order)")
+                    }
+                }
+            }
         }
             //Same section
         else{
             //调整 同一 section 中items 的顺序
-            
-            let sectionInfo = fetchedResultsController.sections![destinationIndexPath.section]
-            let modelCount = sectionInfo.numberOfObjects
             
             // src.order < dst.order : item.order > src.order && item.order <= dst.order
             if srcModel.order!.intValue < dstModel!.order!.intValue {
@@ -249,6 +262,12 @@
         NSLog("[src orin:\(srcModel.order)")
         srcModel.order = newSrcOrder
         NSLog("[src new:\(srcModel.order)")
+        
+        //FIXME: Pending not correct dst task date
+        NSLog("[src orin date:\(srcModel.taskDate)")
+        NSLog("[dst orin date:\(sectionInfo.name)")
+        srcModel.taskDate = CalendarHelper.dateConverter_NSDate(sectionInfo.name)
+        NSLog("[src new date:\(srcModel.taskDate)")
         
         fetchResult!.removeAtIndex(sourceIndexPath.row)
         fetchResult!.insert(srcModel, atIndex: destinationIndexPath.row)
