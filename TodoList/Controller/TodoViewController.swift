@@ -164,9 +164,9 @@
             
             let todoModel = fetchedResultsController.objectAtIndexPath(indexPath) as! TodoModel
             
-            toDoListTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
-            
             managedContext.deleteObject(todoModel)
+            
+            toDoListTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
             
             do{try managedContext.save()}
             catch{fatalError()}
@@ -233,6 +233,12 @@
                         NSLog("[\(i)] new:\(model.order)")
                     }
                     
+                    //FIXME: Pending not correct dst task date
+                    NSLog("[src orin date:\(srcModel.taskDate)")
+                    NSLog("[dst orin date:\(sectionInfo.name)")
+                    srcModel.taskDate = CalendarHelper.dateConverter_NSDate(sectionInfo.name)
+                    NSLog("[src new date:\(srcModel.taskDate)")
+
                 }
             }
             // src.order > dst.order : item.order < src.order && item.order >= dst.order
@@ -258,22 +264,17 @@
         }
         
         //存储调整顺序后的item
+        guard srcModel.order != newSrcOrder else{ return }
         
         NSLog("[src orin:\(srcModel.order)")
         srcModel.order = newSrcOrder
         NSLog("[src new:\(srcModel.order)")
         
-        //FIXME: Pending not correct dst task date
-        NSLog("[src orin date:\(srcModel.taskDate)")
-        NSLog("[dst orin date:\(sectionInfo.name)")
-        srcModel.taskDate = CalendarHelper.dateConverter_NSDate(sectionInfo.name)
-        NSLog("[src new date:\(srcModel.taskDate)")
-        
         fetchResult!.removeAtIndex(sourceIndexPath.row)
         fetchResult!.insert(srcModel, atIndex: destinationIndexPath.row)
         //保存context
-        do{try managedContext.save()}
-        catch{fatalError()}
+        do{ try managedContext.save() }
+        catch{ fatalError() }
         
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             tableView.reloadRowsAtIndexPaths(tableView.indexPathsForVisibleRows!, withRowAnimation: UITableViewRowAnimation.Fade)
