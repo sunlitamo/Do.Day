@@ -184,28 +184,35 @@
         let srcModel = fetchResult![sourceIndexPath.row] as! TodoModel
         let dstModel = fetchResult![destinationIndexPath.row] as? TodoModel
         
+        NSLog("orin src order:\(srcModel.order!)")
+        
         let newSrcOrder = dstModel!.order!
         
-        let sectionInfo = fetchedResultsController.sections![destinationIndexPath.section]
-        let modelCount = sectionInfo.numberOfObjects
+        let sectionInfo_src = fetchedResultsController.sections![sourceIndexPath.section]
+        let sectionInfo_dst = fetchedResultsController.sections![destinationIndexPath.section]
+        
+         NSLog("check 2:section name src:\(sectionInfo_src.name) vs dst:\(sectionInfo_dst.name))")
+        
+        let modelCount = sectionInfo_dst.numberOfObjects
+        
+        let isSameSection  = (sourceIndexPath.section != destinationIndexPath.section)
         
         //Not the same section
         if (sourceIndexPath.section != destinationIndexPath.section) {
-            NSLog("check diff section")
-            if srcModel.order!.intValue < dstModel!.order!.intValue {
+            
+            if srcModel.order!.intValue <= dstModel!.order!.intValue {
                 
                 for i in 1...modelCount {
                     
                     // item.order > dst.order -> break
-                    NSLog("check 3:第\(i)个 vs dst:\(Int(dstModel!.order!.intValue))")
                     
                     if (i >= Int(dstModel!.order!.intValue)) {
                         
-                        let model = fetchResult![i - 1] as! TodoModel
-                        NSLog("[\(i)] model name: \(model.title!)")
-                        NSLog("[\(i)] orin:\(model.order)")
-                        model.order = Int(model.order!.intValue) + 1
-                        NSLog("[\(i)] new:\(model.order)")
+                        let temp = sectionInfo_dst.objects![i - 1] as! TodoModel
+                        NSLog("dst section [\(i)] model name: \(temp.title!)")
+                        NSLog("dst section [\(i)] orin:\(temp.order)")
+                        temp.order = Int(temp.order!.intValue) + 1
+                        NSLog("dst section [\(i)] new:\(temp.order)")
                     }
                 }
             }
@@ -232,13 +239,6 @@
                         model.order = Int(model.order!.intValue) - 1
                         NSLog("[\(i)] new:\(model.order)")
                     }
-                    
-                    //FIXME: Pending not correct dst task date
-                    NSLog("[src orin date:\(srcModel.taskDate)")
-                    NSLog("[dst orin date:\(sectionInfo.name)")
-                    srcModel.taskDate = CalendarHelper.dateConverter_NSDate(sectionInfo.name)
-                    NSLog("[src new date:\(srcModel.taskDate)")
-
                 }
             }
             // src.order > dst.order : item.order < src.order && item.order >= dst.order
@@ -264,21 +264,27 @@
         }
         
         //存储调整顺序后的item
+        if isSameSection {
         guard srcModel.order != newSrcOrder else{ return }
+        }
         
-        NSLog("[src orin:\(srcModel.order)")
+        NSLog("[src orin order:\(srcModel.order!)")
         srcModel.order = newSrcOrder
-        NSLog("[src new:\(srcModel.order)")
+        NSLog("[src new order :\(srcModel.order!)")
+        
+        NSLog("[src orin date:\(srcModel.taskDate)")
+        srcModel.taskDate = CalendarHelper.dateConverter_NSDate(sectionInfo_dst.name)
+        NSLog("[src new date:\(srcModel.taskDate)")
         
         fetchResult!.removeAtIndex(sourceIndexPath.row)
         fetchResult!.insert(srcModel, atIndex: destinationIndexPath.row)
-        //保存context
-        do{ try managedContext.save() }
-        catch{ fatalError() }
-        
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            tableView.reloadRowsAtIndexPaths(tableView.indexPathsForVisibleRows!, withRowAnimation: UITableViewRowAnimation.Fade)
-        })
+//        //保存context
+//        do{ try managedContext.save() }
+//        catch{ fatalError() }
+//        
+//        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+//            tableView.reloadRowsAtIndexPaths(tableView.indexPathsForVisibleRows!, withRowAnimation: UITableViewRowAnimation.Fade)
+//        })
     }
     
     func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -289,15 +295,7 @@
         return UITableViewCellEditingStyle.Delete
     }
  }
- 
- extension TodoViewController: NSFetchedResultsControllerDelegate {
-    
-    func controllerDidChangeContent(controller:
-        NSFetchedResultsController) {
-        toDoListTableView.reloadData()
-    }
- }
- 
+
  extension TodoViewController:UITableViewDelegate{
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -312,6 +310,62 @@
         detailVC.fetchedResultsController = self.fetchedResultsController
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
+ }
+ 
+ extension TodoViewController: NSFetchedResultsControllerDelegate {
     
+    func controllerWillChangeContent(controller:
+        NSFetchedResultsController) {
+        toDoListTableView.beginUpdates()
+    }
+    
+    func controller(controller: NSFetchedResultsController,
+                    didChangeObject anObject: AnyObject,
+                                    atIndexPath indexPath: NSIndexPath?,
+                                                forChangeType type: NSFetchedResultsChangeType,
+                                                              newIndexPath: NSIndexPath?) {
+        
+        switch type {
+        case .Insert:
+            toDoListTableView.insertRowsAtIndexPaths([newIndexPath!],
+                                             withRowAnimation: .Automatic)
+        case .Delete:
+            toDoListTableView.deleteRowsAtIndexPaths([indexPath!],
+                                             withRowAnimation: .Automatic)
+    
+        //TODO check how to do this
+        case .Update: break
+            
+        case .Move:
+            toDoListTableView.deleteRowsAtIndexPaths([indexPath!],
+                                             withRowAnimation: .Automatic)
+            toDoListTableView.insertRowsAtIndexPaths([newIndexPath!],
+                                             withRowAnimation: .Automatic)
+        }
+    }
+    
+    func controllerDidChangeContent(controller:
+        NSFetchedResultsController) {
+        toDoListTableView.endUpdates()
+    }
+    
+    func controller(controller: NSFetchedResultsController,
+                    didChangeSection sectionInfo: NSFetchedResultsSectionInfo,
+                                     atIndex sectionIndex: Int,
+                                             forChangeType type: NSFetchedResultsChangeType) {
+        
+        let indexSet = NSIndexSet(index: sectionIndex)
+        
+        switch type {
+        case .Insert:
+            toDoListTableView.insertSections(indexSet,
+                                     withRowAnimation: .Automatic)
+        case .Delete:
+            toDoListTableView.deleteSections(indexSet,
+                                     withRowAnimation: .Automatic)
+        default :
+            break
+        }
+    }
     
  }
