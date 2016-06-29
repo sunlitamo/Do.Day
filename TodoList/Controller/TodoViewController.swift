@@ -162,17 +162,17 @@
         
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
-            let todoModel = fetchedResultsController.objectAtIndexPath(indexPath) as! TodoModel
-            
-            managedContext.deleteObject(todoModel)
-            
-            toDoListTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
-            
-            do{try managedContext.save()}
-            catch{fatalError()}
+            if editingStyle == .Delete {
+                let item = fetchedResultsController.objectAtIndexPath(indexPath) as! TodoModel
+                coreDataStack.context.deleteObject(item)
+                coreDataStack.saveContext()
+            }
         }
     }
-    
+
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle.Delete
+    }
     
     //FIXME pending..
     func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
@@ -195,7 +195,7 @@
         
         let modelCount = sectionInfo_dst.numberOfObjects
         
-        let isSameSection  = (sourceIndexPath.section != destinationIndexPath.section)
+        let isSameSection  = (sourceIndexPath.section == destinationIndexPath.section)
         
         //Not the same section
         if (sourceIndexPath.section != destinationIndexPath.section) {
@@ -263,21 +263,28 @@
             }
         }
         
+        // from here
         //存储调整顺序后的item
-        if isSameSection {
+        if (isSameSection) {
         guard srcModel.order != newSrcOrder else{ return }
         }
         
+        let newModel = srcModel.copy() as! TodoModel
+        
+        coreDataStack.context.deleteObject(srcModel)
+        
         NSLog("[src orin order:\(srcModel.order!)")
-        srcModel.order = newSrcOrder
+        newModel.order = newSrcOrder
         NSLog("[src new order :\(srcModel.order!)")
         
         NSLog("[src orin date:\(srcModel.taskDate)")
-        srcModel.taskDate = CalendarHelper.dateConverter_NSDate(sectionInfo_dst.name)
+        newModel.taskDate = CalendarHelper.dateConverter_NSDate(sectionInfo_dst.name)
         NSLog("[src new date:\(srcModel.taskDate)")
         
-        fetchResult!.removeAtIndex(sourceIndexPath.row)
-        fetchResult!.insert(srcModel, atIndex: destinationIndexPath.row)
+        coreDataStack.context.insertObject(newModel)
+        coreDataStack.saveContext()
+
+        
 //        //保存context
 //        do{ try managedContext.save() }
 //        catch{ fatalError() }
@@ -289,10 +296,6 @@
     
     func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
-    }
-    
-    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-        return UITableViewCellEditingStyle.Delete
     }
  }
 
@@ -368,4 +371,18 @@
         }
     }
     
+    //
+    //    - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+    //    switch(type) {
+    //    case NSFetchedResultsChangeInsert:
+    //    [self.theTableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+    //    break;
+    //
+    //    case NSFetchedResultsChangeDelete:
+    //    [self.theTableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+    //    break;
+    //    }
+    //    }
+    //    
+    // controller: NSFetchedResultsController,
  }
