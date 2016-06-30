@@ -169,9 +169,9 @@
             }
         }
     }
-
     func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-        return UITableViewCellEditingStyle.Delete
+        if (toDoListTableView.editing) {return .Delete}
+        return .None
     }
     
     //FIXME pending..
@@ -191,7 +191,7 @@
         let sectionInfo_src = fetchedResultsController.sections![sourceIndexPath.section]
         let sectionInfo_dst = fetchedResultsController.sections![destinationIndexPath.section]
         
-         NSLog("check 2:section name src:\(sectionInfo_src.name) vs dst:\(sectionInfo_dst.name))")
+        NSLog("check 2:section name src:\(sectionInfo_src.name) vs dst:\(sectionInfo_dst.name))")
         
         let modelCount = sectionInfo_dst.numberOfObjects
         
@@ -266,39 +266,34 @@
         // from here
         //存储调整顺序后的item
         if (isSameSection) {
-        guard srcModel.order != newSrcOrder else{ return }
+            guard srcModel.order != newSrcOrder else{ return }
         }
-        
-        let newModel = srcModel.copy() as! TodoModel
-        
-        coreDataStack.context.deleteObject(srcModel)
-        
-        NSLog("[src orin order:\(srcModel.order!)")
-        newModel.order = newSrcOrder
-        NSLog("[src new order :\(srcModel.order!)")
-        
-        NSLog("[src orin date:\(srcModel.taskDate)")
-        newModel.taskDate = CalendarHelper.dateConverter_NSDate(sectionInfo_dst.name)
-        NSLog("[src new date:\(srcModel.taskDate)")
-        
-        coreDataStack.context.insertObject(newModel)
-        coreDataStack.saveContext()
 
+        srcModel.setValue(newSrcOrder, forKey:"order")
+        managedContext.refreshAllObjects()
         
-//        //保存context
-//        do{ try managedContext.save() }
-//        catch{ fatalError() }
+//        let newModel = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_MODEL_TODO, inManagedObjectContext: managedContext) as! TodoModel
 //        
-//        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-//            tableView.reloadRowsAtIndexPaths(tableView.indexPathsForVisibleRows!, withRowAnimation: UITableViewRowAnimation.Fade)
-//        })
+//        newModel.setValue(srcModel.valueForKey("image"), forKey: "image")
+//        newModel.setValue(srcModel.valueForKey("title"), forKey: "title")
+//        newModel.setValue(srcModel.valueForKey("done"), forKey: "done")
+//        newModel.setValue(CalendarHelper.dateConverter_NSDate(sectionInfo_dst.name), forKey: "taskDate")
+//        newModel.setValue(newSrcOrder, forKey:"order")
+//        
+//        fetchResult?.removeAtIndex(sourceIndexPath.row)
+//        fetchResult?.insert(newModel, atIndex: destinationIndexPath.row)
+        
+//        coreDataStack.context.deleteObject(srcModel)
+//        coreDataStack.context.insertObject(newModel)
+//        
+//        coreDataStack.saveContext()
     }
     
     func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
+        return false
     }
  }
-
+ 
  extension TodoViewController:UITableViewDelegate{
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -331,19 +326,19 @@
         switch type {
         case .Insert:
             toDoListTableView.insertRowsAtIndexPaths([newIndexPath!],
-                                             withRowAnimation: .Automatic)
+                                                     withRowAnimation: .Automatic)
         case .Delete:
             toDoListTableView.deleteRowsAtIndexPaths([indexPath!],
-                                             withRowAnimation: .Automatic)
-    
+                                                     withRowAnimation: .Automatic)
+            
         //TODO check how to do this
         case .Update: break
             
         case .Move:
             toDoListTableView.deleteRowsAtIndexPaths([indexPath!],
-                                             withRowAnimation: .Automatic)
+                                                     withRowAnimation: .Automatic)
             toDoListTableView.insertRowsAtIndexPaths([newIndexPath!],
-                                             withRowAnimation: .Automatic)
+                                                     withRowAnimation: .Automatic)
         }
     }
     
@@ -362,15 +357,36 @@
         switch type {
         case .Insert:
             toDoListTableView.insertSections(indexSet,
-                                     withRowAnimation: .Automatic)
+                                             withRowAnimation: .Automatic)
         case .Delete:
             toDoListTableView.deleteSections(indexSet,
-                                     withRowAnimation: .Automatic)
+                                             withRowAnimation: .Automatic)
         default :
             break
         }
     }
     
+    @IBAction func rightSwipe(sender: UISwipeGestureRecognizer) {
+        
+    
+    }
+    @IBAction func leftSwipe(sender: UISwipeGestureRecognizer) {
+        
+        if sender.state == UIGestureRecognizerState.Ended {
+            let point = sender.locationInView(toDoListTableView)
+            if let indexPath = toDoListTableView.indexPathForRowAtPoint(point) {
+                _ = toDoListTableView.cellForRowAtIndexPath(indexPath)
+                let model = self.fetchedResultsController.objectAtIndexPath(indexPath) as! TodoModel
+                
+                model.done = NSNumber(bool: true)
+                
+                do{try managedContext.save() }catch{fatalError()}
+                
+                toDoListTableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+            }
+        }
+    
+    }
     //
     //    - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
     //    switch(type) {

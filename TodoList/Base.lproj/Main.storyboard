@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Kho-8a-naY">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Kho-8a-naY">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -268,7 +268,8 @@
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="Vcc-rB-EXc" id="7IN-8X-W2z"/>
-                                    <outlet property="delegate" destination="Vcc-rB-EXc" id="KEe-tl-uJ1"/>
+                                    <outletCollection property="gestureRecognizers" destination="k1u-Li-dOO" appends="YES" id="eBh-fr-fIh"/>
+                                    <outletCollection property="gestureRecognizers" destination="ZYb-Wz-80g" appends="YES" id="LOS-R0-H2S"/>
                                 </connections>
                             </tableView>
                         </subviews>
@@ -287,6 +288,16 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qrV-h8-AFY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="ZYb-Wz-80g">
+                    <connections>
+                        <action selector="rightSwipe:" destination="Vcc-rB-EXc" id="I9M-ia-3yY"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="k1u-Li-dOO">
+                    <connections>
+                        <action selector="leftSwipe:" destination="Vcc-rB-EXc" id="2vm-2h-LrA"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="140" y="573"/>
         </scene>
