@@ -19,6 +19,7 @@
 		E95F41A21D1D891B005BAAE6 /* TodoModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95F41A01D1D891B005BAAE6 /* TodoModel+CoreDataProperties.swift */; };
 		E95F41A31D1D891B005BAAE6 /* TodoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95F41A11D1D891B005BAAE6 /* TodoModel.swift */; };
 		E96424CB1CF5F37700073BEA /* TodoItemDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E96424C91CF5F37700073BEA /* TodoItemDataModel.xcdatamodeld */; };
+		E997A16A1D279AAA00FAC150 /* changeLog in Resources */ = {isa = PBXBuildFile; fileRef = E997A1691D279AAA00FAC150 /* changeLog */; };
 		E99BA7DD1CC62BB900860CB0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99BA7DC1CC62BB900860CB0 /* AppDelegate.swift */; };
 		E99BA7E21CC62BB900860CB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E99BA7E01CC62BB900860CB0 /* Main.storyboard */; };
 		E99BA7E41CC62BB900860CB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E99BA7E31CC62BB900860CB0 /* Assets.xcassets */; };
@@ -40,6 +41,7 @@
 		E95F41A01D1D891B005BAAE6 /* TodoModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TodoModel+CoreDataProperties.swift"; path = "Model/TodoModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		E95F41A11D1D891B005BAAE6 /* TodoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TodoModel.swift; path = Model/TodoModel.swift; sourceTree = "<group>"; };
 		E96424CA1CF5F37700073BEA /* TodoItemDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TodoItemDataModel.xcdatamodel; sourceTree = "<group>"; };
+		E997A1691D279AAA00FAC150 /* changeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = changeLog; sourceTree = "<group>"; };
 		E99BA7D91CC62BB900860CB0 /* Do.Day.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Do.Day.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E99BA7DC1CC62BB900860CB0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E99BA7E11CC62BB900860CB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 				E99BA7E81CC62BB900860CB0 /* Info.plist */,
 				E99BA7DC1CC62BB900860CB0 /* AppDelegate.swift */,
 				E99BA7E31CC62BB900860CB0 /* Assets.xcassets */,
+				E997A1691D279AAA00FAC150 /* changeLog */,
 			);
 			name = "Support files";
 			sourceTree = "<group>";
@@ -203,6 +206,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E99BA7E71CC62BB900860CB0 /* LaunchScreen.storyboard in Resources */,
+				E997A16A1D279AAA00FAC150 /* changeLog in Resources */,
 				E99BA7E41CC62BB900860CB0 /* Assets.xcassets in Resources */,
 				E99BA7E21CC62BB900860CB0 /* Main.storyboard in Resources */,
 			);

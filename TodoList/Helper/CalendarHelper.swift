@@ -82,7 +82,7 @@ class CalendarHelper{
         let date = dateFormatter.dateFromString(dateStr)
         
         let dateFormatter1 = NSDateFormatter()
-        dateFormatter1.dateFormat = "yyyy-MM-dd"
+        dateFormatter1.dateFormat = "EEEE, MMM d, yyyy"
         let dt = dateFormatter1.stringFromDate(date!)
         return dt
     }
@@ -92,9 +92,7 @@ class CalendarHelper{
         
         return dateFormatter.dateFromString(dateStr)!
     }
-
 }
-
 
 extension NSDate{
     

@@ -43,7 +43,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     /**---------------------------------------
      *--- UICollectionView Delegate Method ---
      *---------------------------------------*/
-
+    
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -100,7 +100,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
                 cell.dateText.text = String(indexPath.item + 1 - (date!.firstDay-1) - 7)
             }
             
-           
+            
             if (cell.dateText.text! == String(taskDate!.day)) {
                 
                 configSelectedCell()
@@ -153,7 +153,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             break
         }
     }
-
+    
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
@@ -190,7 +190,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     /**---------------------------------------
      *--- TextField Delegate Method ----------
      *---------------------------------------*/
-
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
@@ -207,7 +207,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     /**---------------------
      *----- UI Control -----
      *---------------------*/
-
+    
     @IBAction func prevMth(sender: AnyObject) {
         date!.month-=1
         updateCalendar(date!.year, month: date!.month)
@@ -216,7 +216,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         date!.month+=1
         updateCalendar(date!.year, month: date!.month)
     }
-
+    
     /**---------------------
      *--- Private Method ---
      *---------------------*/
@@ -300,7 +300,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         if(DeviceType.IS_IPHONE_4){
             toDoViewHeight.constant = 170
         }
-        
+            
         else if(DeviceType.IS_IPHONE_5){
             toDoViewHeight.constant = 190
         }
@@ -322,13 +322,28 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             return
         }
         
-        if todoItem.edit! { updateStorage() }
-        else{ addToStorage() }
+        if todoItem.edit! { updateStorage()}
+        else              { addToStorage() }
         
         do{ try managedContext.save() }
         catch{ fatalError() }
         
+        show()
+        
         dismiss()
+    }
+    
+    private func show(){
+        var fetchResult = self.fetchedResultsController.fetchedObjects
+        
+        NSLog("-----------------------------")
+        for i in 1...fetchResult!.count {
+            
+            let model = fetchResult![i - 1] as! TodoModel
+            NSLog("show name:\(model.title!)")
+            NSLog("show order:\(model.order!)")
+        }
+         NSLog("-----------------------------")
     }
     
     private func addToStorage(){
@@ -354,13 +369,34 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         
     }
     
-    
     private func updateStorage(){
-        
+        let taskDate_orin = todoItem.item?.taskDate
+        let taskDate = CalendarHelper.dateConverter_NSdate((self.taskDate!.year, month: self.taskDate!.month, day: self.taskDate!.day))
         if ((todoItem.item) != nil) {
             todoItem.item!.setValue(UIImagePNGRepresentation(taskImage!), forKey: "image")
             todoItem.item!.setValue(todoTxt.text!, forKey: "title")
-            todoItem.item!.setValue(CalendarHelper.dateConverter_NSdate((self.taskDate!.year, month: self.taskDate!.month, day: self.taskDate!.day)), forKey: "taskDate")
+        }
+        if  taskDate != taskDate_orin {
+            var order:NSNumber = 1
+            
+            for section in fetchedResultsController.sections! {
+                if CalendarHelper.dateConverter_NSDate(section.name) == taskDate_orin {
+                    for i in 1...section.numberOfObjects {
+                        if i > Int(todoItem.item!.order!.intValue)  {
+                            let model = section.objects![i - 1] as! TodoModel
+                            NSLog("update:orin :\(model.title!)")
+                            NSLog("update:orin order:\(model.order)")
+                            model.order = Int(model.order!.intValue) - 1
+                            NSLog("update:new order:\(model.order)")
+                        }
+                    }
+                }
+                if CalendarHelper.dateConverter_NSDate(section.name) == taskDate {
+                    order = section.numberOfObjects + 1
+                    }
+            }
+            todoItem.item!.setValue(order, forKey: "order")
+            todoItem.item!.setValue(taskDate, forKey: "taskDate")
         }
     }
     
@@ -385,17 +421,17 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
             dateSelected.frame = CGRectMake(2.5,0,28, 28)
             dateSelected.layer.cornerRadius = 14
         }
-        
+            
         else if(DeviceType.IS_IPHONE_6){
             dateSelected.frame = CGRectMake(2.5,0,33, 33)
             dateSelected.layer.cornerRadius = 16.5
         }
-        
+            
         else if(DeviceType.IS_IPHONE_6P){
             dateSelected.frame = CGRectMake(2.5,0,38, 38)
             dateSelected.layer.cornerRadius = 19
         }
-        
+            
         else if(DeviceType.IS_IPAD){
             dateSelected.frame = CGRectMake(2.5,0,44, 44)
             dateSelected.layer.cornerRadius = 22

@@ -9,6 +9,9 @@
  import UIKit
  import CoreData
  
+ 
+ let isDebugVersion = true
+ 
  class TodoViewController: UIViewController {
     
     @IBOutlet var toDoListTableView: UITableView!
@@ -21,6 +24,9 @@
     var fetchedResultsController:NSFetchedResultsController!
     
     var managedContext:NSManagedObjectContext!
+    
+    var isMovingItem : Bool = false
+    
     
     override func viewDidLoad() {
         
@@ -36,6 +42,29 @@
         reloadData()
     }
     
+    @IBAction func swipeAction(sender: UISwipeGestureRecognizer) {
+        
+        if sender.state == UIGestureRecognizerState.Ended {
+            let point = sender.locationInView(toDoListTableView)
+            if let indexPath = toDoListTableView.indexPathForRowAtPoint(point) {
+                
+                let model = self.fetchedResultsController.objectAtIndexPath(indexPath) as! TodoModel
+                
+                switch sender.direction {
+                case UISwipeGestureRecognizerDirection.Left:
+                    
+                    if (model.done.boolValue) { model.done = NSNumber(bool: false) }
+                    
+                case UISwipeGestureRecognizerDirection.Right:
+                    
+                    if (!model.done.boolValue) { model.done = NSNumber(bool: true) }
+                    
+                default: break }
+                
+                do{try managedContext.save() } catch{ fatalError() }
+            }
+        }
+    }
     
     /**---------------------
      *--- Private Method ---
@@ -49,6 +78,7 @@
             super.setEditing(true, animated: true)
             toDoListTableView.setEditing(true, animated: true)
             editButton.selected = true
+            
         case true:
             
             super.setEditing(false, animated: true)
@@ -59,7 +89,10 @@
     
     @objc private func viewTransfer() {
         
+        super.setEditing(false, animated: true)
+        toDoListTableView.setEditing(false, animated: true)
         editButton.selected = false
+        
         let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
         detailVC.todoItem = (nil,nil,false)
         detailVC.managedContext = self.managedContext
@@ -70,6 +103,7 @@
     
     
     @objc private func reloadData(){
+        
         loadCoreData()
         toDoListTableView.reloadData()
     }
@@ -77,23 +111,24 @@
     private func loadCoreData() {
         
         let fetchRequest = NSFetchRequest(entityName: "TodoModel")
-        let dateSort =
-            NSSortDescriptor(key: "taskDate", ascending: true)
-        let orderSort =
-            NSSortDescriptor(key: "order", ascending: true)
-        fetchRequest.sortDescriptors = [dateSort,orderSort]
+        
+        let dateSort  = NSSortDescriptor(key: "taskDate", ascending: true)
+        let orderSort = NSSortDescriptor(key: "order", ascending: true)
+        let doneSort  = NSSortDescriptor(key: "done", ascending: true)
+        
+        fetchRequest.sortDescriptors = [dateSort,doneSort,orderSort]
+        
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                               managedObjectContext: coreDataStack.context,
                                                               sectionNameKeyPath: "taskDate",cacheName: nil)
         
         fetchedResultsController.delegate = self
         
-        do{ try fetchedResultsController.performFetch() }
-        catch{ fatalError() }
+        do{ try fetchedResultsController.performFetch() } catch{ fatalError() }
     }
     
     private func prepareUI(){
-        navigationItem.leftBarButtonItem = editButtonItem()
+        
         addButton = UIButton(type:.Custom)
         addButton!.backgroundColor = UIColor.darkGrayColor()
         addButton!.frame = CGRectMake((self.view.frame.width)-70, (self.view.frame.height)-80, 50, 50)
@@ -107,10 +142,27 @@
         editButton!.setImage(UIImage(named:"editting"), forState:.Selected)
         editButton!.frame = CGRectMake(0, 0, 30, 30)
         editButton!.addTarget(self, action: #selector(setEditting), forControlEvents:.TouchUpInside)
+        
+        navigationItem.leftBarButtonItem = editButtonItem()
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: editButton)
         
         self.view.insertSubview(addButton, aboveSubview: toDoListTableView)
         
+    }
+    
+    private func configureAttributeStr(model:TodoModel,sourceStr:String)->NSAttributedString{
+        
+        let font  = (model.done.boolValue) ? UIFont.italicSystemFontOfSize(17) : UIFont.systemFontOfSize(17, weight: UIFontWeightLight)
+        let color = (model.done.boolValue) ? UIColor.lightGrayColor() : UIColor.blackColor()
+        let style = (model.done.boolValue) ? NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue) : NSNumber(integer: NSUnderlineStyle.StyleNone.rawValue)
+       
+        let attributes = [
+            NSFontAttributeName:font,
+            NSForegroundColorAttributeName:color,
+            NSStrikethroughStyleAttributeName:style
+        ]
+        
+        return NSAttributedString(string:sourceStr,attributes:attributes)
     }
     
     override func didReceiveMemoryWarning() {
@@ -131,27 +183,32 @@
     
     func tableView(tableView: UITableView,
                    titleForHeaderInSection section: Int) -> String? {
-        let sectionInfo =
-            fetchedResultsController.sections![section]
+        
+        let sectionInfo = fetchedResultsController.sections![section]
         return  CalendarHelper.dateConverter_GMT(sectionInfo.name)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo =
-            fetchedResultsController.sections![section]
+        
+        let sectionInfo = fetchedResultsController.sections![section]
         return sectionInfo.numberOfObjects
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) ->UITableViewCell {
         
         let todoModel = fetchedResultsController.objectAtIndexPath(indexPath) as! TodoModel
-        
         let cell = toDoListTableView.dequeueReusableCellWithIdentifier(Constants.CELL_TODO) as! TodoCell
         
-        cell.despTxt.text = todoModel.title
+        cell.despTxt.attributedText = configureAttributeStr(todoModel, sourceStr: todoModel.title!)
         cell.taskTimeTxt.text = CalendarHelper.dateConverter_String(todoModel.taskDate!)
+//        cell.hideTxt.hidden = true
+//        if todoModel.done.boolValue {
+//            cell.hideTxt.hidden = false
+//            cell.hideTxt.frame = CGRectMake(56, 10, (cell.frame.width)-30, 20)
+//            cell.hideTxt.attributedText = configureAttributeStr(todoModel, sourceStr:"—————————————————",isPlaceHolder: true)
+//        }
         cell.todoImg.image = UIImage(data:todoModel.image!)
-        cell.todoImg.frame = CGRectMake(8, 10, 50, 50)
+        cell.todoImg.frame = CGRectMake(8, 10, 40, 40)
         cell.despTxt.frame = CGRectMake(56, 10, (cell.frame.width)-30, 20)
         cell.taskTimeTxt.frame = CGRectMake((cell.frame.width)-30, 40, (cell.frame.width)-30, 20)
         
@@ -174,123 +231,109 @@
         return .None
     }
     
-    //FIXME pending..
+    
     func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
         
-        var fetchResult = self.fetchedResultsController.fetchedObjects
+        isMovingItem = true
         
-        NSLog("check 1 \(fetchResult!.count)")
-        
-        let srcModel = fetchResult![sourceIndexPath.row] as! TodoModel
-        let dstModel = fetchResult![destinationIndexPath.row] as? TodoModel
-        
-        NSLog("orin src order:\(srcModel.order!)")
-        
-        let newSrcOrder = dstModel!.order!
-        
-        let sectionInfo_src = fetchedResultsController.sections![sourceIndexPath.section]
-        let sectionInfo_dst = fetchedResultsController.sections![destinationIndexPath.section]
-        
-        NSLog("check 2:section name src:\(sectionInfo_src.name) vs dst:\(sectionInfo_dst.name))")
-        
-        let modelCount = sectionInfo_dst.numberOfObjects
-        
-        let isSameSection  = (sourceIndexPath.section == destinationIndexPath.section)
-        
-        //Not the same section
-        if (sourceIndexPath.section != destinationIndexPath.section) {
+        if var fetchResult = self.fetchedResultsController.fetchedObjects{
             
-            if srcModel.order!.intValue <= dstModel!.order!.intValue {
-                
-                for i in 1...modelCount {
-                    
-                    // item.order > dst.order -> break
-                    
-                    if (i >= Int(dstModel!.order!.intValue)) {
-                        
-                        let temp = sectionInfo_dst.objects![i - 1] as! TodoModel
-                        NSLog("dst section [\(i)] model name: \(temp.title!)")
-                        NSLog("dst section [\(i)] orin:\(temp.order)")
-                        temp.order = Int(temp.order!.intValue) + 1
-                        NSLog("dst section [\(i)] new:\(temp.order)")
-                    }
-                }
-            }
-        }
-            //Same section
-        else{
-            //调整 同一 section 中items 的顺序
+            let sectionInfo_src = fetchedResultsController.sections![sourceIndexPath.section]
+            let sectionInfo_dst = fetchedResultsController.sections![destinationIndexPath.section]
             
-            // src.order < dst.order : item.order > src.order && item.order <= dst.order
-            if srcModel.order!.intValue < dstModel!.order!.intValue {
+            let modelCount_src = sectionInfo_src.numberOfObjects
+            let modelCount_dst = sectionInfo_dst.numberOfObjects
+            
+            
+            let srcModel =  sectionInfo_src.objects?[sourceIndexPath.row] as! TodoModel
+            let dstModel:TodoModel? = (destinationIndexPath.row < modelCount_dst) ? (sectionInfo_dst.objects?[destinationIndexPath.row] as? TodoModel) : nil
+            
+            let newSrcOrder:NSNumber = (dstModel != nil) ? (dstModel!.order!) : (sectionInfo_dst.numberOfObjects + 1)
+            
+            let isSameSection  = (sourceIndexPath.section == destinationIndexPath.section)
+            
+            //Not the same section
+            if (!isSameSection) {
                 
-                for i in 1...modelCount {
-                    
-                    // item.order > dst.order -> break
-                    NSLog("check 3:第\(i)个 vs dst:\(Int(dstModel!.order!.intValue))")
-                    
-                    guard i <= Int(dstModel!.order!.intValue) else{ break }
-                    
-                    if (i <= Int(dstModel!.order!.intValue)) && (i > Int(srcModel.order!.intValue)) {
-                        
-                        let model = fetchResult![i - 1] as! TodoModel
-                        NSLog("[\(i)] model name: \(model.title!)")
-                        NSLog("[\(i)] orin:\(model.order)")
-                        model.order = Int(model.order!.intValue) - 1
-                        NSLog("[\(i)] new:\(model.order)")
+                for i in 1...modelCount_src {
+                    if (i > Int(srcModel.order!.intValue)) {
+                        let temp = sectionInfo_src.objects![i - 1] as! TodoModel
+                        temp.order = Int(temp.order!.intValue) - 1
+                    }
+                }
+                
+                if dstModel != nil {
+                    for i in 1...modelCount_dst {
+                        if (i >= Int(dstModel!.order!.intValue)) {
+                            let temp = sectionInfo_dst.objects![i - 1] as! TodoModel
+                            temp.order = Int(temp.order!.intValue) + 1
+                        }
                     }
                 }
             }
-            // src.order > dst.order : item.order < src.order && item.order >= dst.order
-            if srcModel.order!.intValue > dstModel!.order!.intValue {
+                //Same section
+            else{
+                //调整 同一 section 中items 的顺序
                 
-                for i in 1...modelCount {
+                // src.order < dst.order : item.order > src.order && item.order <= dst.order
+                if srcModel.order!.intValue < dstModel!.order!.intValue {
                     
-                    // item.order > src.order -> break
-                    NSLog("check 3:第\(i)个 vs dst:\(Int(dstModel!.order!.intValue))")
-                    
-                    guard i < Int(srcModel.order!.intValue) else{ break }
-                    
-                    if i < Int(srcModel.order!.intValue) && i >= Int(dstModel!.order!.intValue) {
+                    for i in 1...modelCount_dst {
                         
-                        let model = fetchResult![i - 1] as! TodoModel
-                        NSLog("[\(i)] model name: \(model.title!)")
-                        NSLog("[\(i)] orin:\(model.order)")
-                        model.order = Int(model.order!.intValue) + 1
-                        NSLog("[\(i)] new:\(model.order)")
+                        // item.order > dst.order -> break
+                        guard i <= Int(dstModel!.order!.intValue) else{ break }
+                        
+                        if (i <= Int(dstModel!.order!.intValue)) && (i > Int(srcModel.order!.intValue)) {
+                            
+                            let model = sectionInfo_src.objects![i - 1] as! TodoModel
+                            model.order = Int(model.order!.intValue) - 1
+                        }
+                    }
+                }
+                // src.order > dst.order : item.order < src.order && item.order >= dst.order
+                if srcModel.order!.intValue > dstModel!.order!.intValue {
+                    
+                    for i in 1...modelCount_dst {
+                        
+                        // item.order > src.order -> break
+                        guard i < Int(srcModel.order!.intValue) else{ break }
+                        
+                        if i < Int(srcModel.order!.intValue) && i >= Int(dstModel!.order!.intValue) {
+                            
+                            let model = sectionInfo_src.objects![i - 1] as! TodoModel
+                            model.order = Int(model.order!.intValue) + 1
+                        }
                     }
                 }
             }
+            
+            if (isSameSection) {
+                guard srcModel.order != newSrcOrder else{ return }
+            }
+            
+            fetchResult.removeAtIndex(sourceIndexPath.row)
+            
+            srcModel.taskDate! = CalendarHelper.dateConverter_NSDate(sectionInfo_dst.name)
+            srcModel.order! = newSrcOrder
+            
+            fetchResult.insert(srcModel, atIndex: destinationIndexPath.row)
+            
+            coreDataStack.saveContext()
+            
         }
-        
-        // from here
-        //存储调整顺序后的item
-        if (isSameSection) {
-            guard srcModel.order != newSrcOrder else{ return }
-        }
-
-        srcModel.setValue(newSrcOrder, forKey:"order")
-        managedContext.refreshAllObjects()
-        
-//        let newModel = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_MODEL_TODO, inManagedObjectContext: managedContext) as! TodoModel
-//        
-//        newModel.setValue(srcModel.valueForKey("image"), forKey: "image")
-//        newModel.setValue(srcModel.valueForKey("title"), forKey: "title")
-//        newModel.setValue(srcModel.valueForKey("done"), forKey: "done")
-//        newModel.setValue(CalendarHelper.dateConverter_NSDate(sectionInfo_dst.name), forKey: "taskDate")
-//        newModel.setValue(newSrcOrder, forKey:"order")
-//        
-//        fetchResult?.removeAtIndex(sourceIndexPath.row)
-//        fetchResult?.insert(newModel, atIndex: destinationIndexPath.row)
-        
-//        coreDataStack.context.deleteObject(srcModel)
-//        coreDataStack.context.insertObject(newModel)
-//        
-//        coreDataStack.saveContext()
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.toDoListTableView.reloadRowsAtIndexPaths(self.toDoListTableView.indexPathsForVisibleRows!, withRowAnimation: UITableViewRowAnimation.Fade)
+        })
+        isMovingItem = false
     }
     
     func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return false
+        let sectionInfo_src = fetchedResultsController.sections![indexPath.section]
+        let todoModel = sectionInfo_src.objects![indexPath.row] as! TodoModel
+        if todoModel.done.boolValue {
+            return false
+        }
+        return true
     }
  }
  
@@ -314,6 +357,7 @@
     
     func controllerWillChangeContent(controller:
         NSFetchedResultsController) {
+        if isMovingItem { return }
         toDoListTableView.beginUpdates()
     }
     
@@ -323,6 +367,8 @@
                                                 forChangeType type: NSFetchedResultsChangeType,
                                                               newIndexPath: NSIndexPath?) {
         
+        if isMovingItem { return }
+        
         switch type {
         case .Insert:
             toDoListTableView.insertRowsAtIndexPaths([newIndexPath!],
@@ -330,10 +376,9 @@
         case .Delete:
             toDoListTableView.deleteRowsAtIndexPaths([indexPath!],
                                                      withRowAnimation: .Automatic)
-            
-        //TODO check how to do this
-        case .Update: break
-            
+        case .Update:
+            toDoListTableView.reloadRowsAtIndexPaths([indexPath!],
+                                                     withRowAnimation: .Automatic)
         case .Move:
             toDoListTableView.deleteRowsAtIndexPaths([indexPath!],
                                                      withRowAnimation: .Automatic)
@@ -344,6 +389,8 @@
     
     func controllerDidChangeContent(controller:
         NSFetchedResultsController) {
+        
+        if isMovingItem { return }
         toDoListTableView.endUpdates()
     }
     
@@ -351,7 +398,6 @@
                     didChangeSection sectionInfo: NSFetchedResultsSectionInfo,
                                      atIndex sectionIndex: Int,
                                              forChangeType type: NSFetchedResultsChangeType) {
-        
         let indexSet = NSIndexSet(index: sectionIndex)
         
         switch type {
@@ -361,44 +407,49 @@
         case .Delete:
             toDoListTableView.deleteSections(indexSet,
                                              withRowAnimation: .Automatic)
-        default :
-            break
+        default : break
         }
     }
     
-    @IBAction func rightSwipe(sender: UISwipeGestureRecognizer) {
-        
-    
-    }
-    @IBAction func leftSwipe(sender: UISwipeGestureRecognizer) {
-        
-        if sender.state == UIGestureRecognizerState.Ended {
-            let point = sender.locationInView(toDoListTableView)
-            if let indexPath = toDoListTableView.indexPathForRowAtPoint(point) {
-                _ = toDoListTableView.cellForRowAtIndexPath(indexPath)
-                let model = self.fetchedResultsController.objectAtIndexPath(indexPath) as! TodoModel
-                
-                model.done = NSNumber(bool: true)
-                
-                do{try managedContext.save() }catch{fatalError()}
-                
-                toDoListTableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-            }
-        }
-    
-    }
-    //
-    //    - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-    //    switch(type) {
-    //    case NSFetchedResultsChangeInsert:
-    //    [self.theTableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-    //    break;
-    //
-    //    case NSFetchedResultsChangeDelete:
-    //    [self.theTableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-    //    break;
-    //    }
-    //    }
-    //    
-    // controller: NSFetchedResultsController,
+    /**---------------------------------------
+     *--- Internal test helper ---
+     *---------------------------------------*/
+//    var testDataDone : Bool = false
+//    private func testData() {
+//        
+//        for i in 1...4 {
+//            
+//            let entity = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_MODEL_TODO, inManagedObjectContext: managedContext) as! TodoModel
+//            
+//            entity.setValue(UIImagePNGRepresentation(UIImage(named:"general")!), forKey: "image")
+//            entity.setValue("\(i)", forKey: "title")
+//            entity.setValue(NSNumber(bool: false), forKey: "done")
+//            
+//            if i == 4 {
+//                let taskDate = CalendarHelper.dateConverter_NSdate((2016, month: 07, day: 02))
+//                entity.setValue(taskDate, forKey: "taskDate")
+//                entity.setValue(1, forKey: "order")
+//            }
+//            else{
+//                let taskDate = CalendarHelper.dateConverter_NSdate((2016, month: 07, day: 01))
+//                entity.setValue(taskDate, forKey: "taskDate")
+//                entity.setValue(i, forKey: "order")
+//            }
+//        }
+//        do{try managedContext.save() }catch{fatalError()}
+//        testDataDone = true
+//    }
+//    
+//    private func ModelOrderValidator(){
+//        var fetchResult = self.fetchedResultsController.fetchedObjects
+//        
+//        NSLog("-----------------------------")
+//        for i in 1...fetchResult!.count {
+//            
+//            let model = fetchResult![i - 1] as! TodoModel
+//            NSLog("show name:\(model.title!)")
+//            NSLog("show order:\(model.order!)")
+//        }
+//        NSLog("-----------------------------")
+//    }
  }

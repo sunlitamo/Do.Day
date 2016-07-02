@@ -248,6 +248,12 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="                                                         " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PKa-bB-eAG" userLabel="Hide Txt">
+                                                    <rect key="frame" x="74" y="8" width="452" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="oXU-Ga-MUa" firstAttribute="leading" secondItem="gP8-4o-Fuj" secondAttribute="leadingMargin" id="601-pW-sZt"/>
@@ -261,6 +267,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="despTxt" destination="B2O-yl-DEI" id="d1c-Pd-t4e"/>
+                                            <outlet property="hideTxt" destination="PKa-bB-eAG" id="Ieu-pV-GPZ"/>
                                             <outlet property="taskTimeTxt" destination="fFj-Iu-GHI" id="mFM-F0-mcl"/>
                                             <outlet property="todoImg" destination="oXU-Ga-MUa" id="0ax-nv-7eZ"/>
                                         </connections>
@@ -268,18 +275,22 @@
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="Vcc-rB-EXc" id="7IN-8X-W2z"/>
-                                    <outletCollection property="gestureRecognizers" destination="k1u-Li-dOO" appends="YES" id="eBh-fr-fIh"/>
-                                    <outletCollection property="gestureRecognizers" destination="ZYb-Wz-80g" appends="YES" id="LOS-R0-H2S"/>
+                                    <outlet property="delegate" destination="Vcc-rB-EXc" id="iJU-qR-t4t"/>
                                 </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="wlb-hx-dkI" firstAttribute="leading" secondItem="urF-OB-ae0" secondAttribute="leading" id="0a3-35-zkI"/>
                             <constraint firstItem="wlb-hx-dkI" firstAttribute="bottom" secondItem="enb-K9-4ID" secondAttribute="top" id="Hqi-LI-uHD"/>
                             <constraint firstItem="wlb-hx-dkI" firstAttribute="centerX" secondItem="urF-OB-ae0" secondAttribute="centerX" id="Mss-iR-lUL"/>
                             <constraint firstItem="wlb-hx-dkI" firstAttribute="centerY" secondItem="urF-OB-ae0" secondAttribute="centerY" id="c3N-If-fOD"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="IYd-Fc-ipP" appends="YES" id="Knc-CC-Y4m"/>
+                            <outletCollection property="gestureRecognizers" destination="8BN-pf-qpF" appends="YES" id="yga-pa-iuJ"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="oq3-we-MSh"/>
                     <connections>
@@ -288,14 +299,16 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qrV-h8-AFY" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="right" id="ZYb-Wz-80g">
+                <swipeGestureRecognizer direction="right" id="IYd-Fc-ipP" userLabel="RightSwipe Gesture">
                     <connections>
-                        <action selector="rightSwipe:" destination="Vcc-rB-EXc" id="I9M-ia-3yY"/>
+                        <action selector="swipeAction:" destination="Vcc-rB-EXc" id="ARv-RB-FdM"/>
+                        <outlet property="delegate" destination="Vcc-rB-EXc" id="LjO-Nr-7WH"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="left" id="k1u-Li-dOO">
+                <swipeGestureRecognizer direction="left" id="8BN-pf-qpF" userLabel="LeftSwipe Gesture">
                     <connections>
-                        <action selector="leftSwipe:" destination="Vcc-rB-EXc" id="2vm-2h-LrA"/>
+                        <action selector="swipeAction:" destination="Vcc-rB-EXc" id="qcT-8J-0v7"/>
+                        <outlet property="delegate" destination="Vcc-rB-EXc" id="EjI-xs-V7e"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
