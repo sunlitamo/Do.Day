@@ -248,12 +248,6 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="                                                         " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PKa-bB-eAG" userLabel="Hide Txt">
-                                                    <rect key="frame" x="74" y="8" width="452" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="oXU-Ga-MUa" firstAttribute="leading" secondItem="gP8-4o-Fuj" secondAttribute="leadingMargin" id="601-pW-sZt"/>
@@ -267,7 +261,6 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="despTxt" destination="B2O-yl-DEI" id="d1c-Pd-t4e"/>
-                                            <outlet property="hideTxt" destination="PKa-bB-eAG" id="Ieu-pV-GPZ"/>
                                             <outlet property="taskTimeTxt" destination="fFj-Iu-GHI" id="mFM-F0-mcl"/>
                                             <outlet property="todoImg" destination="oXU-Ga-MUa" id="0ax-nv-7eZ"/>
                                         </connections>
