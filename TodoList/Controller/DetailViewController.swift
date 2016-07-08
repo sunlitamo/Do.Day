@@ -350,6 +350,8 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
         
         let entity = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_MODEL_TODO, inManagedObjectContext: managedContext) as! TodoModel
         
+        NSLog("entity:\(entity)");
+        NSLog("taskData:\(self.taskDate)")
         entity.setValue(UIImagePNGRepresentation(taskImage!), forKey: "image")
         entity.setValue(todoTxt.text!, forKey: "title")
         let taskDate = CalendarHelper.dateConverter_NSdate((self.taskDate!.year, month: self.taskDate!.month, day: self.taskDate!.day))

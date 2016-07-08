@@ -30,6 +30,10 @@
     
     override func viewDidLoad() {
         
+        //managedContext = coreDataStack.context
+        
+        reloadData()
+        
         NSNotificationCenter.defaultCenter().addObserver(self,selector: #selector(reloadData), name: Constants.RELOAD, object: nil)
         
         prepareUI()
@@ -37,9 +41,7 @@
     
     override func viewWillAppear(animated: Bool) {
         
-        managedContext = coreDataStack.context
-        
-        reloadData()
+      
     }
     
     @IBAction func swipeAction(sender: UISwipeGestureRecognizer) {
@@ -100,6 +102,18 @@
         
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
+    func viewTransfer1() {
+        
+        super.setEditing(false, animated: true)
+        
+        let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
+        detailVC.todoItem = (nil,nil,false)
+        detailVC.managedContext = self.managedContext
+        detailVC.fetchedResultsController = self.fetchedResultsController
+        
+        self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+
     
     
     @objc private func reloadData(){
@@ -109,20 +123,6 @@
     }
     
     private func loadCoreData() {
-        
-        let fetchRequest = NSFetchRequest(entityName: "TodoModel")
-        
-        let dateSort  = NSSortDescriptor(key: "taskDate", ascending: true)
-        let orderSort = NSSortDescriptor(key: "order", ascending: true)
-        let doneSort  = NSSortDescriptor(key: "done", ascending: true)
-        
-        fetchRequest.sortDescriptors = [dateSort,doneSort,orderSort]
-        
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                              managedObjectContext: coreDataStack.context,
-                                                              sectionNameKeyPath: "taskDate",cacheName: nil)
-        
-        fetchedResultsController.delegate = self
         
         do{ try fetchedResultsController.performFetch() } catch{ fatalError() }
     }
@@ -322,7 +322,7 @@
             
         }
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.toDoListTableView.reloadRowsAtIndexPaths(self.toDoListTableView.indexPathsForVisibleRows!, withRowAnimation: UITableViewRowAnimation.Fade)
+            self.toDoListTableView.reloadRowsAtIndexPaths(self.toDoListTableView.indexPathsForVisibleRows!, withRowAnimation: UITableViewRowAnimation.None)
         })
         isMovingItem = false
     }
@@ -372,18 +372,18 @@
         switch type {
         case .Insert:
             toDoListTableView.insertRowsAtIndexPaths([newIndexPath!],
-                                                     withRowAnimation: .Automatic)
+                                                     withRowAnimation: .None)
         case .Delete:
             toDoListTableView.deleteRowsAtIndexPaths([indexPath!],
-                                                     withRowAnimation: .Automatic)
+                                                     withRowAnimation: .None)
         case .Update:
             toDoListTableView.reloadRowsAtIndexPaths([indexPath!],
-                                                     withRowAnimation: .Automatic)
+                                                     withRowAnimation: .None)
         case .Move:
             toDoListTableView.deleteRowsAtIndexPaths([indexPath!],
-                                                     withRowAnimation: .Automatic)
+                                                     withRowAnimation: .None)
             toDoListTableView.insertRowsAtIndexPaths([newIndexPath!],
-                                                     withRowAnimation: .Automatic)
+                                                     withRowAnimation: .None)
         }
     }
     
@@ -403,10 +403,10 @@
         switch type {
         case .Insert:
             toDoListTableView.insertSections(indexSet,
-                                             withRowAnimation: .Automatic)
+                                             withRowAnimation: .None)
         case .Delete:
             toDoListTableView.deleteSections(indexSet,
-                                             withRowAnimation: .Automatic)
+                                             withRowAnimation: .None)
         default : break
         }
     }
