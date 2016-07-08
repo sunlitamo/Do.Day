@@ -23,17 +23,13 @@
     var coreDataStack: CoreDataStack!
     var fetchedResultsController:NSFetchedResultsController!
     
-    var managedContext:NSManagedObjectContext!
-    
     var isMovingItem : Bool = false
+    var forceTouchTriggered: Bool = false
     
+    //MARK: UI Control Method
     
     override func viewDidLoad() {
-        
-        //managedContext = coreDataStack.context
-        
-        reloadData()
-        
+    
         NSNotificationCenter.defaultCenter().addObserver(self,selector: #selector(reloadData), name: Constants.RELOAD, object: nil)
         
         prepareUI()
@@ -41,7 +37,7 @@
     
     override func viewWillAppear(animated: Bool) {
         
-      
+        reloadData()
     }
     
     @IBAction func swipeAction(sender: UISwipeGestureRecognizer) {
@@ -63,16 +59,11 @@
                     
                 default: break }
                 
-                do{try managedContext.save() } catch{ fatalError() }
+                coreDataStack.saveContext()
             }
         }
     }
-    
-    /**---------------------
-     *--- Private Method ---
-     *---------------------*/
-    
-    
+    //MARK: Internal Method
     @objc private func setEditting() {
         switch toDoListTableView.editing {
         case false:
@@ -89,32 +80,22 @@
         }
     }
     
-    @objc private func viewTransfer() {
+    func viewTransfer() {
         
         super.setEditing(false, animated: true)
-        toDoListTableView.setEditing(false, animated: true)
-        editButton.selected = false
-        
-        let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
-        detailVC.todoItem = (nil,nil,false)
-        detailVC.managedContext = self.managedContext
-        detailVC.fetchedResultsController = self.fetchedResultsController
-        
-        self.navigationController?.pushViewController(detailVC, animated: true)
-    }
-    func viewTransfer1() {
-        
-        super.setEditing(false, animated: true)
-        
-        let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
-        detailVC.todoItem = (nil,nil,false)
-        detailVC.managedContext = self.managedContext
-        detailVC.fetchedResultsController = self.fetchedResultsController
-        
-        self.navigationController?.pushViewController(detailVC, animated: true)
-    }
-
     
+        if !forceTouchTriggered {
+            toDoListTableView.setEditing(false, animated: true)
+            editButton.selected = false
+        }
+        
+        let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
+        detailVC.todoItem = (nil,nil,false)
+        detailVC.managedContext = coreDataStack.context
+        detailVC.fetchedResultsController = self.fetchedResultsController
+        
+        self.navigationController?.pushViewController(detailVC, animated: true)
+    }
     
     @objc private func reloadData(){
         
@@ -155,7 +136,7 @@
         let font  = (model.done.boolValue) ? UIFont.italicSystemFontOfSize(17) : UIFont.systemFontOfSize(17, weight: UIFontWeightLight)
         let color = (model.done.boolValue) ? UIColor.lightGrayColor() : UIColor.blackColor()
         let style = (model.done.boolValue) ? NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue) : NSNumber(integer: NSUnderlineStyle.StyleNone.rawValue)
-       
+        
         let attributes = [
             NSFontAttributeName:font,
             NSForegroundColorAttributeName:color,
@@ -170,9 +151,7 @@
     }
  }
  
- /**---------------------------------------
-  *--- UITableView Delegate Method ---
-  *---------------------------------------*/
+ //MARK:UITableView DataSource Method
  
  extension TodoViewController:UITableViewDataSource{
     
@@ -201,12 +180,6 @@
         
         cell.despTxt.attributedText = configureAttributeStr(todoModel, sourceStr: todoModel.title!)
         cell.taskTimeTxt.text = CalendarHelper.dateConverter_String(todoModel.taskDate!)
-//        cell.hideTxt.hidden = true
-//        if todoModel.done.boolValue {
-//            cell.hideTxt.hidden = false
-//            cell.hideTxt.frame = CGRectMake(56, 10, (cell.frame.width)-30, 20)
-//            cell.hideTxt.attributedText = configureAttributeStr(todoModel, sourceStr:"—————————————————",isPlaceHolder: true)
-//        }
         cell.todoImg.image = UIImage(data:todoModel.image!)
         cell.todoImg.frame = CGRectMake(8, 10, 40, 40)
         cell.despTxt.frame = CGRectMake(56, 10, (cell.frame.width)-30, 20)
@@ -337,6 +310,7 @@
     }
  }
  
+ //MARK: UITableViewDelegate Method
  extension TodoViewController:UITableViewDelegate{
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -347,7 +321,7 @@
         
         let detailVC = self.storyboard!.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
         detailVC.todoItem = (todoModel,indexPath.row,true)
-        detailVC.managedContext = self.managedContext
+        detailVC.managedContext = coreDataStack.context
         detailVC.fetchedResultsController = self.fetchedResultsController
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -414,42 +388,42 @@
     /**---------------------------------------
      *--- Internal test helper ---
      *---------------------------------------*/
-//    var testDataDone : Bool = false
-//    private func testData() {
-//        
-//        for i in 1...4 {
-//            
-//            let entity = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_MODEL_TODO, inManagedObjectContext: managedContext) as! TodoModel
-//            
-//            entity.setValue(UIImagePNGRepresentation(UIImage(named:"general")!), forKey: "image")
-//            entity.setValue("\(i)", forKey: "title")
-//            entity.setValue(NSNumber(bool: false), forKey: "done")
-//            
-//            if i == 4 {
-//                let taskDate = CalendarHelper.dateConverter_NSdate((2016, month: 07, day: 02))
-//                entity.setValue(taskDate, forKey: "taskDate")
-//                entity.setValue(1, forKey: "order")
-//            }
-//            else{
-//                let taskDate = CalendarHelper.dateConverter_NSdate((2016, month: 07, day: 01))
-//                entity.setValue(taskDate, forKey: "taskDate")
-//                entity.setValue(i, forKey: "order")
-//            }
-//        }
-//        do{try managedContext.save() }catch{fatalError()}
-//        testDataDone = true
-//    }
-//    
-//    private func ModelOrderValidator(){
-//        var fetchResult = self.fetchedResultsController.fetchedObjects
-//        
-//        NSLog("-----------------------------")
-//        for i in 1...fetchResult!.count {
-//            
-//            let model = fetchResult![i - 1] as! TodoModel
-//            NSLog("show name:\(model.title!)")
-//            NSLog("show order:\(model.order!)")
-//        }
-//        NSLog("-----------------------------")
-//    }
+    //    var testDataDone : Bool = false
+    //    private func testData() {
+    //
+    //        for i in 1...4 {
+    //
+    //            let entity = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_MODEL_TODO, inManagedObjectContext: managedContext) as! TodoModel
+    //
+    //            entity.setValue(UIImagePNGRepresentation(UIImage(named:"general")!), forKey: "image")
+    //            entity.setValue("\(i)", forKey: "title")
+    //            entity.setValue(NSNumber(bool: false), forKey: "done")
+    //
+    //            if i == 4 {
+    //                let taskDate = CalendarHelper.dateConverter_NSdate((2016, month: 07, day: 02))
+    //                entity.setValue(taskDate, forKey: "taskDate")
+    //                entity.setValue(1, forKey: "order")
+    //            }
+    //            else{
+    //                let taskDate = CalendarHelper.dateConverter_NSdate((2016, month: 07, day: 01))
+    //                entity.setValue(taskDate, forKey: "taskDate")
+    //                entity.setValue(i, forKey: "order")
+    //            }
+    //        }
+    //        do{try managedContext.save() }catch{fatalError()}
+    //        testDataDone = true
+    //    }
+    //
+    //    private func ModelOrderValidator(){
+    //        var fetchResult = self.fetchedResultsController.fetchedObjects
+    //
+    //        NSLog("-----------------------------")
+    //        for i in 1...fetchResult!.count {
+    //
+    //            let model = fetchResult![i - 1] as! TodoModel
+    //            NSLog("show name:\(model.title!)")
+    //            NSLog("show order:\(model.order!)")
+    //        }
+    //        NSLog("-----------------------------")
+    //    }
  }

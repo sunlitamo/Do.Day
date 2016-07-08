@@ -24,8 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         self.configureCoreData()
         
-        todoViewController.fetchedResultsController = fetchedResultsController
-        todoViewController.coreDataStack = self.coreDataStack
+        self.configureRootVC(false)
         
         return true
     }
@@ -56,56 +55,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
-        //        if shortcutItem.type == "com.do.day.addtask"{
-        //
-        //            let storyboard = UIStoryboard(name: "Main",bundle: nil)
-        //
-        //            let addVC = storyboard.instantiateViewControllerWithIdentifier("DetailViewController") as!DetailViewController
-        //
-        //            let rootController = UIApplication.sharedApplication().keyWindow?.rootViewController as! UINavigationController
-        //
-        //
-        //            rootController.presentViewController(addVC, animated: false, completion: {
-        //                () -> Void in
-        //
-        //                self.configureCoreData()
-        //
-        //                addVC.todoItem = (nil,nil,false)
-        //                addVC.managedContext = self.coreDataStack.context
-        //                addVC.fetchedResultsController = self.fetchedResultsController
-        //
-        //                completionHandler(true)
-        //
-        //            })
-        //        }
         
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
         if shortcutItem.type == "com.do.day.addtask"{
             
-            self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            
-            //FirstViewcontroller UI will be called as root UIView
-            let addVC : DetailViewController = storyboard.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
-            
-            let rootVC : TodoViewController = storyboard.instantiateViewControllerWithIdentifier("TodoViewController") as! TodoViewController
+            todoViewController = storyboard.instantiateViewControllerWithIdentifier("TodoViewController") as! TodoViewController
             
             self.configureCoreData()
             
-          //  addVC.todoItem = (nil,nil,false)
-            rootVC.managedContext = self.coreDataStack.context
-            rootVC.fetchedResultsController = self.fetchedResultsController
-
+            self.configureRootVC(true)
             
-            let navigationController = UINavigationController(rootViewController: rootVC)
+            let navigationController = UINavigationController(rootViewController: todoViewController)
             
             self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
             self.window?.rootViewController = navigationController
             self.window?.makeKeyAndVisible()
             
-            rootVC.viewTransfer1()
+            todoViewController.viewTransfer()
             
+            completionHandler(true)
         }
     }
     
@@ -123,6 +92,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                               sectionNameKeyPath: "taskDate",cacheName: nil)
         
         fetchedResultsController.delegate = todoViewController
+    }
+    
+    private func configureRootVC(isForceTouch:Bool){
+        
+        todoViewController.fetchedResultsController = fetchedResultsController
+        todoViewController.coreDataStack = self.coreDataStack
+        todoViewController.forceTouchTriggered = isForceTouch
     }
     
 }

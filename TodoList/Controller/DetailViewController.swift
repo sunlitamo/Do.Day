@@ -334,16 +334,16 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     }
     
     private func show(){
-        var fetchResult = self.fetchedResultsController.fetchedObjects
-        
-        NSLog("-----------------------------")
-        for i in 1...fetchResult!.count {
-            
-            let model = fetchResult![i - 1] as! TodoModel
-            NSLog("show name:\(model.title!)")
-            NSLog("show order:\(model.order!)")
-        }
-         NSLog("-----------------------------")
+//        var fetchResult = self.fetchedResultsController.fetchedObjects
+//        
+//        NSLog("-----------------------------")
+//        for i in 1...fetchResult!.count {
+//            
+//            let model = fetchResult![i - 1] as! TodoModel
+//            NSLog("show name:\(model.title!)")
+//            NSLog("show order:\(model.order!)")
+//        }
+//         NSLog("-----------------------------")
     }
     
     private func addToStorage(){
