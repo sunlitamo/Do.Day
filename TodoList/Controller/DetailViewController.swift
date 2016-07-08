@@ -156,28 +156,24 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        
+        var size = CGSizeMake(0, 0);
         switch collectionView {
-        case self.todoItemCollectionView:
-            var size = CGSizeMake(0, 0);
             
-            if(DeviceType.IS_IPHONE_4){size = CGSizeMake(40, 50);}
-            else if(DeviceType.IS_IPHONE_5){size = CGSizeMake(40, 50);}
-            else if(DeviceType.IS_IPHONE_6){size = CGSizeMake(50, 60);}
-            else if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(55, 65);}
-            else if(DeviceType.IS_IPAD){size = CGSizeMake(55, 65);}
+        case self.todoItemCollectionView:
+            if      (DeviceType.IS_IPHONE_4)    {size = CGSizeMake(40, 50);}
+            else if (DeviceType.IS_IPHONE_5)    {size = CGSizeMake(40, 50);}
+            else if (DeviceType.IS_IPHONE_6)    {size = CGSizeMake(50, 60);}
+            else if (DeviceType.IS_IPHONE_6P)   {size = CGSizeMake(55, 65);}
+            else if (DeviceType.IS_IPAD)        {size = CGSizeMake(55, 65);}
             
             return size;
             
         case self.calendarCollectionView:
-            
-            var size = CGSizeMake(0, 0);
-            
-            if(DeviceType.IS_IPHONE_4){size = CGSizeMake(33, 18);}
-            else if(DeviceType.IS_IPHONE_5){size = CGSizeMake(33, 28);}
-            else if(DeviceType.IS_IPHONE_6){size = CGSizeMake(38, 33);}
-            else  if(DeviceType.IS_IPHONE_6P){size = CGSizeMake(43, 38);}
-            else  if(DeviceType.IS_IPAD){size = CGSizeMake(43, 38);}
+            if      (DeviceType.IS_IPHONE_4)    {size = CGSizeMake(33, 18);}
+            else if (DeviceType.IS_IPHONE_5)    {size = CGSizeMake(33, 28);}
+            else if (DeviceType.IS_IPHONE_6)    {size = CGSizeMake(38, 33);}
+            else if (DeviceType.IS_IPHONE_6P)   {size = CGSizeMake(43, 38);}
+            else if (DeviceType.IS_IPAD)        {size = CGSizeMake(43, 38);}
             
             return size;
             
@@ -297,7 +293,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     
     private func OptimizeUI(){
         
-        if(DeviceType.IS_IPHONE_4){
+        if     (DeviceType.IS_IPHONE_4){
             toDoViewHeight.constant = 170
         }
             
@@ -334,16 +330,16 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
     }
     
     private func show(){
-//        var fetchResult = self.fetchedResultsController.fetchedObjects
-//        
-//        NSLog("-----------------------------")
-//        for i in 1...fetchResult!.count {
-//            
-//            let model = fetchResult![i - 1] as! TodoModel
-//            NSLog("show name:\(model.title!)")
-//            NSLog("show order:\(model.order!)")
-//        }
-//         NSLog("-----------------------------")
+        //        var fetchResult = self.fetchedResultsController.fetchedObjects
+        //
+        //        NSLog("-----------------------------")
+        //        for i in 1...fetchResult!.count {
+        //
+        //            let model = fetchResult![i - 1] as! TodoModel
+        //            NSLog("show name:\(model.title!)")
+        //            NSLog("show order:\(model.order!)")
+        //        }
+        //         NSLog("-----------------------------")
     }
     
     private func addToStorage(){
@@ -395,7 +391,7 @@ class DetailViewController: UIViewController,UICollectionViewDelegate,UICollecti
                 }
                 if CalendarHelper.dateConverter_NSDate(section.name) == taskDate {
                     order = section.numberOfObjects + 1
-                    }
+                }
             }
             todoItem.item!.setValue(order, forKey: "order")
             todoItem.item!.setValue(taskDate, forKey: "taskDate")
