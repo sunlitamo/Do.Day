@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F838B616BD4CFFE71FC10B4 /* Pods_Do_Day.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2DA23D98397D82CFCDEBF /* Pods_Do_Day.framework */; };
 		ACA62F5B1D1A51DC00A606F1 /* CalendarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA62F581D1A51DC00A606F1 /* CalendarCell.swift */; };
 		ACA62F5C1D1A51DC00A606F1 /* TodoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA62F591D1A51DC00A606F1 /* TodoCell.swift */; };
 		ACA62F5D1D1A51DC00A606F1 /* TodoCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA62F5A1D1A51DC00A606F1 /* TodoCollectionCell.swift */; };
@@ -26,9 +27,14 @@
 		E99BA7E71CC62BB900860CB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E99BA7E51CC62BB900860CB0 /* LaunchScreen.storyboard */; };
 		E9BB8D411D1F7DD9008A8995 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BB8D401D1F7DD9008A8995 /* CoreDataStack.swift */; };
 		E9BB8D451D1FB4F6008A8995 /* LanguageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BB8D441D1FB4F6008A8995 /* LanguageHelper.swift */; };
+		E9C9D46C1E818C4A00A73D5C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9C9D46B1E818C4A00A73D5C /* GoogleService-Info.plist */; };
+		E9EA9FAE1E818F7000D9932C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9EA9FAD1E818F7000D9932C /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		66F2DA23D98397D82CFCDEBF /* Pods_Do_Day.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Do_Day.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6994A03989924F9AA63C7E37 /* Pods-Do.Day.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Do.Day.release.xcconfig"; path = "Pods/Target Support Files/Pods-Do.Day/Pods-Do.Day.release.xcconfig"; sourceTree = "<group>"; };
+		7266759E5D9F1C25328C54FB /* Pods-Do.Day.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Do.Day.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Do.Day/Pods-Do.Day.debug.xcconfig"; sourceTree = "<group>"; };
 		ACA62F581D1A51DC00A606F1 /* CalendarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CalendarCell.swift; path = Cell/CalendarCell.swift; sourceTree = "<group>"; };
 		ACA62F591D1A51DC00A606F1 /* TodoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TodoCell.swift; path = Cell/TodoCell.swift; sourceTree = "<group>"; };
 		ACA62F5A1D1A51DC00A606F1 /* TodoCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TodoCollectionCell.swift; path = Cell/TodoCollectionCell.swift; sourceTree = "<group>"; };
@@ -50,6 +56,8 @@
 		E99BA7E81CC62BB900860CB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9BB8D401D1F7DD9008A8995 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataStack.swift; path = Model/CoreDataStack.swift; sourceTree = "<group>"; };
 		E9BB8D441D1FB4F6008A8995 /* LanguageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LanguageHelper.swift; path = Helper/LanguageHelper.swift; sourceTree = "<group>"; };
+		E9C9D46B1E818C4A00A73D5C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E9EA9FAD1E818F7000D9932C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,12 +65,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F838B616BD4CFFE71FC10B4 /* Pods_Do_Day.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		480A6AA4E7F48D0FD7BD9749 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				66F2DA23D98397D82CFCDEBF /* Pods_Do_Day.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DACD1706F05687D015384D08 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7266759E5D9F1C25328C54FB /* Pods-Do.Day.debug.xcconfig */,
+				6994A03989924F9AA63C7E37 /* Pods-Do.Day.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		E991D83C1D12E7460002B94C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -95,6 +121,7 @@
 		E998B6BD1CD5C44D0001CCBF /* Support files */ = {
 			isa = PBXGroup;
 			children = (
+				E9C9D46B1E818C4A00A73D5C /* GoogleService-Info.plist */,
 				E96424C91CF5F37700073BEA /* TodoItemDataModel.xcdatamodeld */,
 				E99BA7E51CC62BB900860CB0 /* LaunchScreen.storyboard */,
 				E99BA7E81CC62BB900860CB0 /* Info.plist */,
@@ -118,8 +145,11 @@
 		E99BA7D01CC62BB800860CB0 = {
 			isa = PBXGroup;
 			children = (
-				E99BA7DB1CC62BB900860CB0 /* TodoList */,
+				E9EA9FAD1E818F7000D9932C /* Default-568h@2x.png */,
+				E99BA7DB1CC62BB900860CB0 /* Do.Day */,
 				E99BA7DA1CC62BB900860CB0 /* Products */,
+				DACD1706F05687D015384D08 /* Pods */,
+				480A6AA4E7F48D0FD7BD9749 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -131,7 +161,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E99BA7DB1CC62BB900860CB0 /* TodoList */ = {
+		E99BA7DB1CC62BB900860CB0 /* Do.Day */ = {
 			isa = PBXGroup;
 			children = (
 				E991D83C1D12E7460002B94C /* Utils */,
@@ -143,6 +173,7 @@
 				E99BA7E01CC62BB900860CB0 /* Main.storyboard */,
 				E998B6BD1CD5C44D0001CCBF /* Support files */,
 			);
+			name = Do.Day;
 			path = TodoList;
 			sourceTree = "<group>";
 		};
@@ -153,9 +184,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E99BA7EB1CC62BB900860CB0 /* Build configuration list for PBXNativeTarget "Do.Day" */;
 			buildPhases = (
+				408AEB81432A342F6CD7FAFD /* [CP] Check Pods Manifest.lock */,
 				E99BA7D51CC62BB900860CB0 /* Sources */,
 				E99BA7D61CC62BB900860CB0 /* Frameworks */,
 				E99BA7D71CC62BB900860CB0 /* Resources */,
+				1037B4F5C84DF6AA3E9CA7DA /* [CP] Embed Pods Frameworks */,
+				E47EC1EAF668E20F8B14CC53 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -173,12 +207,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = Sunlit.Amo;
 				TargetAttributes = {
 					E99BA7D81CC62BB900860CB0 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = JSLYM942GL;
+						LastSwiftMigration = 0820;
 					};
 				};
 			};
@@ -207,12 +242,62 @@
 			files = (
 				E99BA7E71CC62BB900860CB0 /* LaunchScreen.storyboard in Resources */,
 				E997A16A1D279AAA00FAC150 /* changeLog in Resources */,
+				E9C9D46C1E818C4A00A73D5C /* GoogleService-Info.plist in Resources */,
 				E99BA7E41CC62BB900860CB0 /* Assets.xcassets in Resources */,
 				E99BA7E21CC62BB900860CB0 /* Main.storyboard in Resources */,
+				E9EA9FAE1E818F7000D9932C /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1037B4F5C84DF6AA3E9CA7DA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Do.Day/Pods-Do.Day-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		408AEB81432A342F6CD7FAFD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		E47EC1EAF668E20F8B14CC53 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Do.Day/Pods-Do.Day-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E99BA7D51CC62BB900860CB0 /* Sources */ = {
@@ -273,8 +358,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -296,11 +383,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -318,8 +406,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -335,15 +425,18 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		E99BA7EC1CC62BB900860CB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7266759E5D9F1C25328C54FB /* Pods-Do.Day.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -355,12 +448,14 @@
 				PRODUCT_NAME = Do.Day;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		E99BA7ED1CC62BB900860CB0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6994A03989924F9AA63C7E37 /* Pods-Do.Day.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -371,6 +466,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sunlitamo;
 				PRODUCT_NAME = Do.Day;
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

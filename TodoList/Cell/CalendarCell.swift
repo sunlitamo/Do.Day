@@ -28,12 +28,12 @@ class CalendarCell: UICollectionViewCell {
             contentViewFrame.size.height = 28
         }
         
-        if(DeviceType.IS_IPHONE_6){
+        if(DeviceType.IS_IPHONE_6 || DeviceType.IS_IPHONE_7){
             contentViewFrame.size.width = 38
             contentViewFrame.size.height = 33
         }
         
-        if(DeviceType.IS_IPHONE_6P){
+        if(DeviceType.IS_IPHONE_6P || DeviceType.IS_IPHONE_7P){
             contentViewFrame.size.width = 43
             contentViewFrame.size.height = 38
         }

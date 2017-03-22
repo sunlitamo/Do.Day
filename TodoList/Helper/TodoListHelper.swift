@@ -10,15 +10,15 @@ import UIKit
 
 class TodoListHelper {
     
-    static func customSnapshotFromView(inputView:UIView!)->UIView{
+    static func customSnapshotFromView(_ inputView:UIView!)->UIView{
         UIGraphicsBeginImageContextWithOptions(inputView.frame.size, false, 0)
-        inputView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        inputView.layer.render(in: UIGraphicsGetCurrentContext()!)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         let snapshot = UIImageView(image:image)
         snapshot.layer.masksToBounds = false
         snapshot.layer.cornerRadius = 0
-        snapshot.frame = CGRectMake(inputView.frame.origin.x, inputView.frame.origin.y, inputView.frame.width, inputView.frame.height)
+        snapshot.frame = CGRect(x: inputView.frame.origin.x, y: inputView.frame.origin.y, width: inputView.frame.width, height: inputView.frame.height)
         return snapshot
     }
     static func getWeekDays() -> [String]{

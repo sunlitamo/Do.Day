@@ -10,55 +10,55 @@ import UIKit
 
 class CalendarHelper{
     
-    static func dateFormatter(date: (year:Int,month:Int,day:Int))->String{
+    static func dateFormatter(_ date: (year:Int,month:Int,day:Int))->String{
         
         return "\(date.year)-\(date.month)-\(date.day)"
         
     }
     
-    static func loadCalendar(currentYear:Int,currentMonth:Int)->(year:Int,month:Int,firstDay:Int,daysCount:Int){
+    static func loadCalendar(_ currentYear:Int,currentMonth:Int)->(year:Int,month:Int,firstDay:Int,daysCount:Int){
         
-        let gregorian: NSCalendar = NSCalendar(calendarIdentifier:NSCalendarIdentifierGregorian)!
-        let components: NSDateComponents = gregorian.components([.Year,.Month,.Weekday],fromDate: dateConverter_NSdate((year:currentYear,month:currentMonth,day:1)))
-        let range = gregorian.rangeOfUnit(.Day, inUnit: .Month, forDate: NSDate(year: currentYear,month: currentMonth))
-        return (components.year,components.month,components.weekday,range.length)
+        let gregorian: Calendar = Calendar(identifier:Calendar.Identifier.gregorian)
+        let components: DateComponents = (gregorian as NSCalendar).components([.year,.month,.weekday],from: dateConverter_NSdate((year:currentYear,month:currentMonth,day:1)))
+        let range = (gregorian as NSCalendar).range(of: .day, in: .month, for: Date(year: currentYear,month: currentMonth))
+        return (components.year!,components.month!,components.weekday!,range.length)
     }
     
     static func getCurrentDate()->(year:Int,month:Int,firstDay:Int,daysCount:Int){
         
-        let gregorian: NSCalendar = NSCalendar(calendarIdentifier:NSCalendarIdentifierGregorian)!
-        let components: NSDateComponents = gregorian.components([.Year,.Month,.Weekday],fromDate: NSDate())
-        let range = gregorian.rangeOfUnit(.Day, inUnit: .Month, forDate: NSDate())
-        return (components.year,components.month,components.weekday,range.length)
+        let gregorian: Calendar = Calendar(identifier:Calendar.Identifier.gregorian)
+        let components: DateComponents = (gregorian as NSCalendar).components([.year,.month,.weekday],from: Date())
+        let range = (gregorian as NSCalendar).range(of: .day, in: .month, for: Date())
+        return (components.year!,components.month!,components.weekday!,range.length)
     }
     
-    static func formatDate(month:Int)->String{
-        return NSDateFormatter().monthSymbols[month-1]
+    static func formatDate(_ month:Int)->String{
+        return DateFormatter().monthSymbols[month-1]
     }
-    static func dateConverter_NSdate(date: (year:Int,month:Int,day:Int))->NSDate{
+    static func dateConverter_NSdate(_ date: (year:Int,month:Int,day:Int))->Date{
         
         let strDate = "\(date.year)-\(date.month)-\(date.day)"
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        let dt = dateFormatter.dateFromString(strDate)!
+        let dt = dateFormatter.date(from: strDate)!
         return dt
     }
     
-    static func dateConverter_Closure(date:NSDate)->(Int,Int,Int){
+    static func dateConverter_Closure(_ date:Date)->(Int,Int,Int){
         
-        let gregorian: NSCalendar = NSCalendar(calendarIdentifier:NSCalendarIdentifierGregorian)!
-        let components: NSDateComponents = gregorian.components([.Year,.Month,.Day],fromDate: date)
-        return (components.year,components.month,components.day)
+        let gregorian: Calendar = Calendar(identifier:Calendar.Identifier.gregorian)
+        let components: DateComponents = (gregorian as NSCalendar).components([.year,.month,.day],from: date)
+        return (components.year!,components.month!,components.day!)
     }
     
-    static func dateConverter_String(date:NSDate)->String{
-        let dateFormatter = NSDateFormatter()
+    static func dateConverter_String(_ date:Date)->String{
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        let dt = dateFormatter.stringFromDate(date)
+        let dt = dateFormatter.string(from: date)
         return dt
     }
 
-    static func updateCalendar(year:Int,month:Int)->(Int,Int) {
+    static func updateCalendar(_ year:Int,month:Int)->(Int,Int) {
         
         var date = (year:year,month:month)
         
@@ -75,36 +75,36 @@ class CalendarHelper{
         return date
     }
     
-    static func dateConverter_GMT(dateStr:String)->String{
-        let dateFormatter = NSDateFormatter()
+    static func dateConverter_GMT(_ dateStr:String)->String{
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
         
-        let date = dateFormatter.dateFromString(dateStr)
+        let date = dateFormatter.date(from: dateStr)
         
-        let dateFormatter1 = NSDateFormatter()
+        let dateFormatter1 = DateFormatter()
         dateFormatter1.dateFormat = "EEEE, MMM d, yyyy"
-        let dt = dateFormatter1.stringFromDate(date!)
+        let dt = dateFormatter1.string(from: date!)
         return dt
     }
-    static func dateConverter_NSDate(dateStr:String)->NSDate{
-        let dateFormatter = NSDateFormatter()
+    static func dateConverter_NSDate(_ dateStr:String)->Date{
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
         
-        return dateFormatter.dateFromString(dateStr)!
+        return dateFormatter.date(from: dateStr)!
     }
 }
 
-extension NSDate{
+extension Date{
     
-    convenience
+    
     init(year:Int,month:Int){
         
-        let dateStringFormatter = NSDateFormatter()
+        let dateStringFormatter = DateFormatter()
         dateStringFormatter.dateFormat = "yyyy-MM-dd"
-        dateStringFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        dateStringFormatter.locale = Locale(identifier: "en_US_POSIX")
         
-        let d = dateStringFormatter.dateFromString("\(year)-\(month)-01")
-        self.init(timeInterval:0, sinceDate:d!)
+        let d = dateStringFormatter.date(from: "\(year)-\(month)-01")
+        self.init(timeInterval:0, since:d!)
     }
 }
 

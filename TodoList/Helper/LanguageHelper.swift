@@ -13,7 +13,7 @@ class LanguageHelper {
     
     static func isCN()->Bool{
         
-        switch(NSLocale.preferredLanguages()[0]){
+        switch(Locale.preferredLanguages[0]){
             
         case "zh-Hans-CN","zh-Hant-CN","zh-HK":
             return true

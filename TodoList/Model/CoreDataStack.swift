@@ -12,33 +12,34 @@ class CoreDataStack {
     
     let modelName = "TodoItemDataModel"
     
-    lazy var context: NSManagedObjectContext = {
+    public func getContext() -> NSManagedObjectContext {
         
-        var managedObjectContext = NSManagedObjectContext(
-            concurrencyType: .MainQueueConcurrencyType)
+        let psc = self.getPsc();
+        let managedObjectContext = NSManagedObjectContext(
+            concurrencyType: .mainQueueConcurrencyType)
         
-        managedObjectContext.persistentStoreCoordinator = self.psc
+        print("managedObjectContext is \(managedObjectContext)")
+        
+        managedObjectContext.persistentStoreCoordinator = psc;
         return managedObjectContext
-    }()
+    }
     
-    private lazy var psc: NSPersistentStoreCoordinator = {
+    private func getPsc() -> NSPersistentStoreCoordinator {
         
-        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.getManagedObjectModel())
         
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("TodoItemDataModel.sqlite")
-        
-       
+        let url = self.applicationDocumentsDirectory.appendingPathComponent("TodoItemDataModel.sqlite")
         
         do {
             let options = [NSMigratePersistentStoresAutomaticallyOption : true]
             
-            try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url,options: options)
+            try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url,options: options)
         } catch  {
             // Report any error we got.
             var dict = [String: AnyObject]()
             let failureReason = "There was an error creating or loading the application's saved data."
-            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
-            dict[NSLocalizedFailureReasonErrorKey] = failureReason
+            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data" as AnyObject?
+            dict[NSLocalizedFailureReasonErrorKey] = failureReason as AnyObject?
             
             dict[NSUnderlyingErrorKey] = error as NSError
             let wrappedError = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
@@ -48,25 +49,25 @@ class CoreDataStack {
             abort()
 
         }
-
         return coordinator
-    }()
+    }
     
-    private lazy var managedObjectModel: NSManagedObjectModel = {
+    private func getManagedObjectModel() -> NSManagedObjectModel {
         
-        let modelURL = NSBundle.mainBundle().URLForResource(self.modelName, withExtension: "momd")!
-        return NSManagedObjectModel(contentsOfURL: modelURL)!
-    }()
+        let modelURL = Bundle.main.url(forResource: self.modelName, withExtension: "momd")!
+        return NSManagedObjectModel(contentsOf: modelURL)!
+    }
     
-    private lazy var applicationDocumentsDirectory: NSURL = {
-        let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+    fileprivate lazy var applicationDocumentsDirectory: URL = {
+        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return urls[urls.count-1]
     }()
     
-    func saveContext () {
-        if context.hasChanges {
+    public func saveContext () {
+        let mContext = self.getContext()
+        if mContext.hasChanges {
             do {
-                try context.save()
+                try mContext.save()
             } catch let error as NSError {
                 print("Error: \(error.localizedDescription)")
                 abort()

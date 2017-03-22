@@ -14,8 +14,8 @@ import CoreData
 
 extension TodoModel {
 
-    @NSManaged var image: NSData?
-    @NSManaged var taskDate: NSDate?
+    @NSManaged var image: Data?
+    @NSManaged var taskDate: Date?
     @NSManaged var title: String?
     @NSManaged var done: NSNumber
     @NSManaged var order: NSNumber?
